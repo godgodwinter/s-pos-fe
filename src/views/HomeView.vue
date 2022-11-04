@@ -1,9 +1,14 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+// import TheWelcome from '../components/TheWelcome.vue'
 </script>
 
 <template>
-  <main>
+  <!-- <main>
     <TheWelcome />
-  </main>
+  </main> -->
+
+  <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
+  <button class="btn">Button</button>
 </template>
