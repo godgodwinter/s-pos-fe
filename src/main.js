@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
@@ -15,7 +16,7 @@ import { QuillEditor } from "@vueup/vue-quill";
 
 // testing
 
-// style 
+// style
 import "@vuepic/vue-datepicker/dist/main.css";
 import "vue-good-table-next/dist/vue-good-table-next.css";
 import "vue-select/dist/vue-select.css";
@@ -23,15 +24,14 @@ import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const app = createApp(App);
 
-
 const globalOptions = {
-    //   debug: "info",
-    //   modules: {
-    //     toolbar: "minimal",
-    //   },
-    placeholder: "Type here . . .",
-    readOnly: false,
-    theme: "snow",
+  //   debug: "info",
+  //   modules: {
+  //     toolbar: "minimal",
+  //   },
+  placeholder: "Type here . . .",
+  readOnly: false,
+  theme: "snow",
 };
 
 app.use(createPinia());

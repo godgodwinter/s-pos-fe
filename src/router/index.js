@@ -1,23 +1,41 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+/* eslint-disable */
+import { createRouter, createWebHistory } from "vue-router";
+import LandingRoutes from "./LandingRoutes";
+import AdminRoutes from "./AdminRoutes";
+import Toast from "@/components/lib/Toast";
+// import { useStoreAuth } from "@/stores/auth";
+// const storeAuth = useStoreAuth();
+const routes = [];
+
+routes.push(...LandingRoutes, ...AdminRoutes);
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
-  ]
-})
+  history: createWebHistory(),
+  routes,
+});
 
-export default router
+// router.beforeEach((to, from) => {
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!localStorage.getItem("token")) {
+//       return router.push("/login");
+//     }
+//   }
+// });
+
+router.beforeEach((to, from, next) => {
+  if (
+    to.matched.some((record) => record.meta.requireAuth) &&
+    !localStorage.getItem("isLogin")
+  ) {
+    Toast.babeng("Info", "Login terlebih dahulu!");
+    // console.log("belum login");
+    // next("/login");
+    next({ name: "login" });
+    // console.log(to);
+    // next({ name: "login", query: { next: to.fullPath } });
+  } else {
+    next();
+  }
+});
+
+export default router;
