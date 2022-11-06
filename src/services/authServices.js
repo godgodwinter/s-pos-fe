@@ -7,7 +7,7 @@ const storeAuth = useStoreAuth();
 
 const doLogin = async (username, password) => {
   try {
-    const response = await Api.post("siswa/auth/login", {
+    const response = await Api.post("admin/auth/login", {
       email: username,
       password: password,
     });
@@ -35,7 +35,7 @@ const doLogin = async (username, password) => {
 
 const doCheckToken = async (token) => {
   try {
-    const response = await Api.post(`siswa/auth/profile`, {
+    const response = await Api.post(`admin/auth/profile`, {
       token: token,
     });
     // console.log(response.hasOwnProperty("data"));
