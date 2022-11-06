@@ -1,14 +1,15 @@
 <script setup>
+/* eslint-disable */
 // import TheWelcome from '../components/TheWelcome.vue'
 </script>
 
 <template>
-    <!-- <main>
-    <TheWelcome />
-  </main> -->
-
-    <h1 class="text-3xl font-bold underline">
-        Hello world!
-    </h1>
-    <button class="btn">Button</button>
+    <div>
+        <h1 class="text-3xl font-bold underline text-center">
+            TWENTY ACCESSORIES
+        </h1>
+        <!-- FORM-LOGIN -->
+        <!-- FORM-LOGIN -->
+        <button class="btn">Button</button>
+    </div>
 </template>
