@@ -32,7 +32,7 @@ const AdminRoutes = [
           },
         },
         // component: () => import("@/views/admin/dashboard/DashboardIndex.vue"),
-        component: () => import("@/views/landing/AboutView.vue"),
+        component: () => import("@/views/admin/dashboard/DashboardIndex.vue"),
       },
     ],
   },

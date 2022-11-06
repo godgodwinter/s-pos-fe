@@ -21,6 +21,11 @@ const LandingRoutes = [
         component: () => import("@/views/landing/HomeView.vue"),
       },
       {
+        path: "/",
+        name: "LandingLogin",
+        component: () => import("@/views/landing/HomeView.vue"),
+      },
+      {
         path: "/home",
         name: "homeIndex",
         component: () => import("@/views/landing/HomeView.vue"),
@@ -42,18 +47,18 @@ const LandingRoutes = [
       {
         path: "/login",
         name: "login",
-        component: () => import("@/views/landing/LoginView.vue"),
+        component: () => import("@/views/landing/HomeView.vue"),
       },
       {
         path: "/404",
         name: "NotFound",
-        component: () => import("@/views/landing/LoginView.vue"),
+        component: () => import("@/views/landing/HomeView.vue"),
       },
     ],
   },
-  // {
-  //   path: "/:catchAll(.*)",
-  //   redirect: "/404",
-  // },
+  {
+    path: "/:catchAll(.*)",
+    redirect: "/404",
+  },
 ];
 export default LandingRoutes;

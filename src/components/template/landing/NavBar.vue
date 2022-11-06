@@ -1,16 +1,17 @@
-<script setup lang="ts">
+<script setup>
+/* eslint-disable */
 import { ref, computed } from "vue";
 import { useStoreLanding } from "@/stores/landing";
 const storeLanding = useStoreLanding();
 const theme = computed(() => storeLanding.getTheme);
 
-const doUpdateTheme = (theme: string) => {
+const doUpdateTheme = (theme) => {
   storeLanding.setTheme(theme);
 };
 
 const windowTop = ref(0);
 
-const onScroll = (e: any) => {
+const onScroll = (e) => {
   windowTop.value = e.target.documentElement.scrollTop;
   //   console.log({ top: windowTop.value });
 };

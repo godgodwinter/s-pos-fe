@@ -10,8 +10,8 @@ const onSubmit = async () => {
     console.log(username.value, password.value);
     const res = await API.doLogin(username.value, password.value);
     if (res === true) {
-        // router.push({ name: "AdminLayout" });
-        console.log("Login Berhasil");
+        router.push({ name: "AdminLayout" });
+        // console.log("Login Berhasil");
     }
 };
 </script>

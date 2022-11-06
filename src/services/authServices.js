@@ -11,9 +11,9 @@ const doLogin = async (username, password) => {
       email: username,
       password: password,
     });
-    console.log(response);
+    // console.log(response);
     if (response.code === 200) {
-      const { token } = response;
+      const { token } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("isLogin", true);
       console.log("Login berhasil");
