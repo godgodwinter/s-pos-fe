@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 export const useStoreLanding = defineStore({
   id: "storeLanding",
   state: () => ({
-    theme: "cupcake",
+    theme: "bumblebee",
   }),
   getters: {
     getTheme: (state) => state.theme,

@@ -7,7 +7,7 @@ const router = useRouter();
 const username = ref("");
 const password = ref("");
 const onSubmit = async () => {
-    console.log(username.value, password.value);
+    // console.log(username.value, password.value);
     const res = await API.doLogin(username.value, password.value);
     if (res === true) {
         router.push({ name: "AdminLayout" });
