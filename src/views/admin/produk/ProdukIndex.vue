@@ -8,6 +8,7 @@ import ButtonEdit from "@/components/Button/ButtonEdit.vue";
 import ButtonDelete from "@/components/Button/ButtonDel.vue";
 import Toast from "@/components/lib/Toast";
 import { useRouter } from "vue-router";
+import Fungsi from "@/components/lib/FungsiCampur"
 const router = useRouter();
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("produk");
@@ -109,6 +110,10 @@ const doDeleteData = async (id, index) => {
                         <ButtonEdit @click="doEditData(props.row.id, props.index)" />
                         <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
                     </div>
+                </span>
+                <span v-else-if="props.column.field == 'harga_jual_default'">
+                    {{ Fungsi.formatRupiah(props.row.harga_jual_default, "Rp. ") }}
+
                 </span>
 
                 <span v-else>

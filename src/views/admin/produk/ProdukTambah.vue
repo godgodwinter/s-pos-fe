@@ -10,6 +10,7 @@ import Toast from "@/components/lib/Toast";
 import { useRouter } from "vue-router";
 import moment from "moment/min/moment-with-locales";
 import localization from "moment/locale/id";
+import Fungsi from "@/components/lib/FungsiCampur";
 moment.updateLocale("id", localization);
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("produk");
@@ -18,11 +19,12 @@ const router = useRouter();
 const dataDetail = ref({});
 const dataForm = ref({});
 
+const numberPattern = /\d+/g;
 const onSubmit = async (values) => {
     // console.log(values);
     let dataStore = {
         nama: dataDetail.value.nama,
-        harga_jual_default: dataDetail.value.harga_jual_default,
+        harga_jual_default: dataDetail.value.harga_jual_default.match(numberPattern).join(''),
         satuan: dataDetail.value.satuan,
         berat: dataDetail.value.berat,
     };
@@ -39,6 +41,14 @@ const onSubmit = async (values) => {
         console.error(error);
     }
 };
+
+const labelRupiah = ref("Rp. 0")
+const babengRupiah = (angka = 0) => {
+    // console.log(angka);
+    labelRupiah.value = Fungsi.formatRupiah(angka, 'Rp. ');
+    dataDetail.value.harga_jual_default = Fungsi.formatRupiah(angka, 'Rp. ');
+    // console.log(dataDetail.value.harga_jual_default.match(numberPattern).join(''));
+}
 </script>
 <template>
     <BreadCrumb />
@@ -57,10 +67,13 @@ const onSubmit = async (values) => {
                 </div>
                 <div class="flex flex-col">
                     <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Harga Jual
-                        Default : Rupiah </label>
-                    <Field v-model="dataDetail.harga_jual_default" :rules="fnValidasi.validateDataRupiah" type="number"
+                        Default : Rupiah
+                        <!-- {{ labelRupiah }}  -->
+                    </label>
+                    <Field v-model="dataDetail.harga_jual_default" :rules="fnValidasi.validateData" type="text"
                         name="harga_jual_default" ref="harga_jual_default"
-                        class="input input-bordered md:w-full max-w-2xl" required />
+                        class="input input-bordered md:w-full max-w-2xl" required
+                        @keyup="babengRupiah(dataDetail.harga_jual_default)" />
                     <div class="text-xs text-red-600 mt-1">
                         {{ errors.harga_jual_default }}
                     </div>
