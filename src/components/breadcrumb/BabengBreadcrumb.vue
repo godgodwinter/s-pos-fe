@@ -36,9 +36,9 @@ const doGoto = (name) => {
   <div class="text-sm breadcrumbs">
     <ul>
       <li v-for="(item, index) in dataBreadcrumb" @click="doGoto(item.data.goto, item.params)" :key="index">
-        <RouterLink :to="item.data.goto">{{
-            item.data.name
-        }}</RouterLink>
+        <RouterLink :to="item.data.goto">
+          <label class="capitalize font-medium pb-2"> {{ item.data.name }}</label>
+        </RouterLink>
       </li>
     </ul>
   </div>
