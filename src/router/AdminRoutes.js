@@ -177,6 +177,74 @@ const AdminRoutes = [
           },
         ],
       },
+
+      {
+        path: `${prefix}/administrator`,
+        name: `${prefixName}administrator`,
+        meta: {
+          title: "administrator",
+          icon: "mdi-home",
+          breadcrumb: {
+            name: "administrator",
+            path: `${prefix}/administrator`,
+            goto: `${prefixName}administrator`,
+          },
+        },
+        redirect: `${prefix}/administrator/index`,
+        component: () =>
+          import("@/views/admin/administrator/AdministratorLayout.vue"),
+        children: [
+          {
+            path: `${prefix}/administrator/index`,
+            name: `${prefixName}administrator-index`,
+            meta: {
+              title: "administrator",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Index",
+                path: `${prefix}/administrator/index`,
+                goto: `${prefixName}administrator-index`,
+              },
+            },
+            component: () =>
+              import("@/views/admin/administrator/AdministratorIndex.vue"),
+          },
+
+          {
+            path: `${prefix}/administrator/tambah`,
+            name: `${prefixName}administrator-tambah`,
+            meta: {
+              title: "administrator",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "tambah",
+                path: `${prefix}/administrator/tambah`,
+                goto: `${prefixName}administrator-tambah`,
+              },
+            },
+            component: () =>
+              import("@/views/admin/administrator/AdministratorTambah.vue"),
+          },
+          {
+            path: `${prefix}/administrator/edit/:id`,
+            name: `${prefixName}administrator-edit`,
+            meta: {
+              title: "administrator",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Edit",
+                path: `${prefix}/administrator/edit`,
+                goto: `${prefixName}administrator-edit`,
+                params: {
+                  id: "id",
+                },
+              },
+            },
+            component: () =>
+              import("@/views/admin/administrator/AdministratorEdit.vue"),
+          },
+        ],
+      },
     ],
   },
 ];
