@@ -97,17 +97,33 @@ const AdminRoutes = [
             },
             component: () => import("@/views/admin/produk/ProdukIndex.vue"),
           },
-
           {
-            path: `${prefix}/produk/edit`,
+            path: `${prefix}/produk/tambah`,
+            name: `${prefixName}produk-tambah`,
+            meta: {
+              title: "produk",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "tambah",
+                path: `${prefix}/produk/tambah`,
+                goto: `${prefixName}produk-tambah`,
+              },
+            },
+            component: () => import("@/views/admin/produk/ProdukTambah.vue"),
+          },
+          {
+            path: `${prefix}/produk/edit/:id`,
             name: `${prefixName}produk-edit`,
             meta: {
-              title: "Produk",
+              title: "produk",
               icon: "mdi-home",
               breadcrumb: {
                 name: "Edit",
                 path: `${prefix}/produk/edit`,
                 goto: `${prefixName}produk-edit`,
+                params: {
+                  id: "id",
+                },
               },
             },
             component: () => import("@/views/admin/produk/ProdukEdit.vue"),
@@ -143,7 +159,6 @@ const AdminRoutes = [
             },
             component: () => import("@/views/admin/label/LabelIndex.vue"),
           },
-
           {
             path: `${prefix}/label/tambah`,
             name: `${prefixName}label-tambah`,

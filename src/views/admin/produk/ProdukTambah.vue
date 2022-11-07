@@ -7,30 +7,17 @@ import fnValidasi from "@/components/lib/babengValidasi";
 import BreadCrumb from "@/components/breadcrumb/BabengBreadcrumb.vue"
 import { useStoreAdmin } from "@/stores/admin";
 import Toast from "@/components/lib/Toast";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import moment from "moment/min/moment-with-locales";
 import localization from "moment/locale/id";
 moment.updateLocale("id", localization);
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("produk");
 
-
 const router = useRouter();
-const route = useRoute();
 const dataDetail = ref({});
 const dataForm = ref({});
 
-const id = route.params.id;
-const getDataDetail = async () => {
-    try {
-        const response = await Api.get(`admin/produk/${id}`);
-        dataDetail.value = response.data;
-        return response.data;
-    } catch (error) {
-        console.error(error);
-    }
-};
-getDataDetail();
 const onSubmit = async (values) => {
     // console.log(values);
     let dataStore = {
@@ -41,7 +28,7 @@ const onSubmit = async (values) => {
     };
     // console.log(dataForm);
     try {
-        const response = await Api.put(`admin/produk/${id}`, dataStore);
+        const response = await Api.post(`admin/produk`, dataStore);
         console.log(response);
         // data.id = response.id;
         Toast.success("Info", "Data berhasil ditambahkan!");

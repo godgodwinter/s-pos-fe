@@ -1,6 +1,7 @@
 <script setup>
 /* eslint-disable */
 import { ref } from "vue";
+import Api from "@/axios/axios";
 import { useStoreAdmin } from "@/stores/admin";
 import { useStoreAdminAuth } from "@/stores/adminAuth";
 import { computed } from "vue";
@@ -25,12 +26,25 @@ const doLogout = async () => {
 // let a = "ini a";
 // let b = "ok";
 // console.log(a ?? b);
+// const me = ref({});
+const getDataDetail = async () => {
+  try {
+    const response = await Api.post(`admin/auth/profile`);
+    // me.value = response.data.me;
+    storeAdminAuth.setMe(response.data.me)
+    // console.log(me.value);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+getDataDetail();
 </script>
 <template>
   <div class="drawer-side">
     <label for="my-drawer-2" class="drawer-overlay"></label>
-    <ul class="menu p-4 overflow-y-auto w-80 bg-base-200 text-base-content space-y-1">
-      <div class="py-4 border-secondary border-b">
+    <ul class="menu p-4 overflow-y-auto   w-80 bg-base-200 text-base-content space-y-1  max-w-sm ">
+      <div class="py-4 border-secondary border-b w-full ">
         <div class="flex gap-2 items-center justify-center">
           <div class="avatar online">
             <div class="w-24 rounded-full border border-sky-200 hover:border-sky-400 shadow hover:shadow-lg">
@@ -42,7 +56,7 @@ const doLogout = async () => {
           <div class="flex flex-col justify-center w-full">
             <div class="flex justify-center gap-2 w-full">
               <p class="text-base-content text-md font-semibold text-center py-2 capitalize">
-                {{ me.nama }}
+                {{ me.name }}
               </p>
               <router-link :to="{ name: 'admin-profile' }">
                 <span class="py-2 hover:scale-125 tooltip" data-tip="Update Profile">

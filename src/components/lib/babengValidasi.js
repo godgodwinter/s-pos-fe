@@ -57,6 +57,20 @@ const validateDataSkor = (value) => {
   }
   return true;
 };
+const validateDataRupiah = (value) => {
+  if (!value) {
+    return "This field is required";
+  }
+
+  if (isNaN(value)) {
+    return "This field must be a number";
+  }
+
+  if (value < 0) {
+    return "This field must be a number greater than 0";
+  }
+  return true;
+};
 
 const validateSelect = (value) => {
   if (!value) {
@@ -72,6 +86,7 @@ const fnValidasi = {
   validateData2,
   validateDataNumber,
   validateDataSkor,
+  validateDataRupiah,
   validateSelect,
 };
 export default fnValidasi;
