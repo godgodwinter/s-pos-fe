@@ -324,6 +324,69 @@ const AdminRoutes = [
           },
         ],
       },
+
+      {
+        path: `${prefix}/restok`,
+        name: `${prefixName}restok`,
+        meta: {
+          title: "restok",
+          icon: "mdi-home",
+          breadcrumb: {
+            name: "restok",
+            path: `${prefix}/restok`,
+            goto: `${prefixName}restok`,
+          },
+        },
+        redirect: `${prefix}/restok/index`,
+        component: () => import("@/views/admin/restok/RestokLayout.vue"),
+        children: [
+          {
+            path: `${prefix}/restok/index`,
+            name: `${prefixName}restok-index`,
+            meta: {
+              title: "restok",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Index",
+                path: `${prefix}/restok/index`,
+                goto: `${prefixName}restok-index`,
+              },
+            },
+            component: () => import("@/views/admin/restok/RestokIndex.vue"),
+          },
+          {
+            path: `${prefix}/restok/tambah`,
+            name: `${prefixName}restok-tambah`,
+            meta: {
+              title: "restok",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "tambah",
+                path: `${prefix}/restok/tambah`,
+                goto: `${prefixName}restok-tambah`,
+              },
+            },
+            component: () => import("@/views/admin/restok/RestokTambah.vue"),
+          },
+          {
+            path: `${prefix}/restok/edit/:id`,
+            name: `${prefixName}restok-edit`,
+            meta: {
+              title: "restok",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Edit",
+                path: `${prefix}/restok/edit`,
+                goto: `${prefixName}restok-edit`,
+                params: {
+                  id: "id",
+                },
+              },
+            },
+            component: () => import("@/views/admin/restok/RestokEdit.vue"),
+          },
+        ],
+      },
     ],
   },
 ];
