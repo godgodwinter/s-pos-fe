@@ -10,7 +10,7 @@ import Toast from "@/components/lib/Toast";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const storeAdmin = useStoreAdmin();
-storeAdmin.setPagesActive("label");
+storeAdmin.setPagesActive("pegawai");
 
 const columns = [
     {
@@ -26,13 +26,23 @@ const columns = [
         field: "nama",
         type: "String",
     },
+    {
+        label: "Username",
+        field: "username",
+        type: "String",
+    },
+    {
+        label: "Email",
+        field: "email",
+        type: "String",
+    },
 ];
 
 const dataAsli = ref([]);
 const data = ref([]);
 const getData = async () => {
     try {
-        const response = await Api.get(`admin/label`);
+        const response = await Api.get(`admin/pegawai`);
         dataAsli.value = response.data;
         data.value = response.data;
 
@@ -44,14 +54,14 @@ const getData = async () => {
 getData();
 const doEditData = async (id, index) => {
     router.push({
-        name: "admin-label-edit",
+        name: "admin-pegawai-edit",
         params: { id: id },
     });
 };
 const doDeleteData = async (id, index) => {
     if (confirm("Apakah anda yakin menghapus data ini?")) {
         try {
-            const response = await Api.delete(`admin/label/${id}`);
+            const response = await Api.delete(`admin/pegawai/${id}`);
             data.value.splice(index, 1);
             Toast.success("Success", "Data Berhasil dihapus!");
             return response.data;
@@ -75,7 +85,7 @@ const doDeleteData = async (id, index) => {
             <template #table-actions>
                 <div class="space-x-1 space-y-1 gap-1">
                     <router-link :to="{
-                        name: 'admin-label-tambah',
+                        name: 'admin-pegawai-tambah',
                     }">
                         <button class="btn btn-sm btn-primary tooltip" data-tip="Tambah ">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"

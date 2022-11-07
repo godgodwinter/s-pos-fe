@@ -12,7 +12,7 @@ import moment from "moment/min/moment-with-locales";
 import localization from "moment/locale/id";
 moment.updateLocale("id", localization);
 const storeAdmin = useStoreAdmin();
-storeAdmin.setPagesActive("label");
+storeAdmin.setPagesActive("pegawai");
 
 const router = useRouter();
 const route = useRoute();
@@ -22,7 +22,7 @@ const dataForm = ref({});
 const id = route.params.id;
 const getDataDetail = async () => {
     try {
-        const response = await Api.get(`admin/label/${id}`);
+        const response = await Api.get(`admin/pegawai/${id}`);
         dataDetail.value = response.data;
         return response.data;
     } catch (error) {
@@ -35,18 +35,48 @@ const onSubmit = async (values) => {
     // console.log(values);
     let dataStore = {
         nama: dataDetail.value.nama,
+        username: dataDetail.value.username,
+        email: dataDetail.value.email,
+        password: dataDetail.value.password,
     };
     // console.log(dataForm);
     try {
-        const response = await Api.put(`admin/label/${id}`, dataStore);
+        const response = await Api.put(`admin/pegawai/${id}`, dataStore);
         // console.log(response);
         // data.id = response.id;
         Toast.success("Info", "Data berhasil ditambahkan!");
-        router.push({ name: "admin-label" });
+        router.push({ name: "admin-pegawai" });
 
         return true;
     } catch (error) {
         console.error(error);
+    }
+};
+
+
+const isPasswordSama = ref(false);
+dataDetail.value.password == null;
+dataDetail.value.password2 == null;
+if (dataDetail.value.password == null && dataDetail.value.password2 == null) {
+    isPasswordSama.value = true;
+}
+const doAlertPasswordTidakSama = () => {
+    Toast.warning("Info", "Gagal! Password tidak sama!");
+};
+const periksaPassword = () => {
+    //   Toast.success("Info", `tes ${dataDetail.value.password}`);
+    // console.log(dataDetail.value.password, dataDetail.value.password2, '--', dataDetail.value.password == null || "" && dataDetail.value.password2 == null || "" ? "sama" : 'tidaksama');
+    if (dataDetail.value.password != null) {
+        if (dataDetail.value.password != dataDetail.value.password2) {
+            isPasswordSama.value = false;
+            //   doAlertPasswordTidakSama();
+        } else {
+            //   Toast.success("Info", "Password sama!");
+            isPasswordSama.value = true;
+        }
+    }
+    if (dataDetail.value.password == null || dataDetail.value.password == "" && dataDetail.value.password2 == null || dataDetail.value.password2 == "") {
+        isPasswordSama.value = true;
     }
 };
 </script>
@@ -64,13 +94,55 @@ const onSubmit = async (values) => {
                             {{ errors.nama }}
                         </div>
                     </div>
+                    <div class="flex flex-col">
+                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Username</label>
+                        <Field v-model="dataDetail.username" :rules="fnValidasi.validateData" type="text"
+                            name="username" ref="username" class="input input-bordered md:w-full max-w-2xl" required />
+                        <div class="text-xs text-red-600 mt-1">
+                            {{ errors.username }}
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Email</label>
+                        <Field v-model="dataDetail.email" :rules="fnValidasi.validateEmail" type="text" name="email"
+                            ref="email" class="input input-bordered md:w-full max-w-2xl" required />
+                        <div class="text-xs text-red-600 mt-1">
+                            {{ errors.email }}
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Password</label>
+                        <Field v-model="dataDetail.password" type="password" name="password" ref="password"
+                            autocomplete="off" class="input input-bordered md:w-full max-w-2xl"
+                            @keyup="periksaPassword()" required />
+                        <div class="text-xs text-red-600 mt-1">
+                            {{ errors.password }}
+                        </div>
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Konfirmasi
+                            Password</label>
+                        <Field v-model="dataDetail.password2" type="password" name="password2" ref="password2"
+                            autocomplete="off" class="input input-bordered md:w-full max-w-2xl"
+                            @keyup="periksaPassword()" required />
+                        <div class="text-xs text-red-600 mt-1">
+                            {{ errors.password2 }}
+                        </div>
+
+                    </div>
 
                 </div>
             </div>
 
             <div class="w-full flex justify-end py-10 px-10 gap-4">
                 <!-- <span class="btn btn-secondary">Batal</span> -->
-                <button class="btn btn-primary">Simpan</button>
+                <button class="btn btn-lg btn-primary" v-if="isPasswordSama">
+                    Simpan
+                </button>
+                <span class="btn btn-lg btn-dark" v-else @click="doAlertPasswordTidakSama()">
+                    Simpan
+                </span>
             </div>
         </Form>
     </div>

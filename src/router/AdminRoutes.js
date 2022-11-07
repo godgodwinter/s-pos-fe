@@ -245,6 +245,70 @@ const AdminRoutes = [
           },
         ],
       },
+
+      {
+        path: `${prefix}/pegawai`,
+        name: `${prefixName}pegawai`,
+        meta: {
+          title: "pegawai",
+          icon: "mdi-home",
+          breadcrumb: {
+            name: "pegawai",
+            path: `${prefix}/pegawai`,
+            goto: `${prefixName}pegawai`,
+          },
+        },
+        redirect: `${prefix}/pegawai/index`,
+        component: () => import("@/views/admin/pegawai/PegawaiLayout.vue"),
+        children: [
+          {
+            path: `${prefix}/pegawai/index`,
+            name: `${prefixName}pegawai-index`,
+            meta: {
+              title: "pegawai",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Index",
+                path: `${prefix}/pegawai/index`,
+                goto: `${prefixName}pegawai-index`,
+              },
+            },
+            component: () => import("@/views/admin/pegawai/PegawaiIndex.vue"),
+          },
+
+          {
+            path: `${prefix}/pegawai/tambah`,
+            name: `${prefixName}pegawai-tambah`,
+            meta: {
+              title: "pegawai",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "tambah",
+                path: `${prefix}/pegawai/tambah`,
+                goto: `${prefixName}pegawai-tambah`,
+              },
+            },
+            component: () => import("@/views/admin/pegawai/PegawaiTambah.vue"),
+          },
+          {
+            path: `${prefix}/pegawai/edit/:id`,
+            name: `${prefixName}pegawai-edit`,
+            meta: {
+              title: "pegawai",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Edit",
+                path: `${prefix}/pegawai/edit`,
+                goto: `${prefixName}pegawai-edit`,
+                params: {
+                  id: "id",
+                },
+              },
+            },
+            component: () => import("@/views/admin/pegawai/PegawaiEdit.vue"),
+          },
+        ],
+      },
     ],
   },
 ];
