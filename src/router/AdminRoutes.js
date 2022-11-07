@@ -35,6 +35,40 @@ const AdminRoutes = [
         component: () => import("@/views/admin/dashboard/DashboardIndex.vue"),
       },
       {
+        path: `${prefix}/profile`,
+        name: `${prefixName}profile`,
+        meta: {
+          title: "profile",
+          icon: "mdi-home",
+          breadcrumb: {
+            name: "profile",
+            path: `${prefix}/profile`,
+            goto: `${prefixName}profile`,
+          },
+        },
+        redirect: `${prefix}/profile/edit`,
+        component: () => import("@/views/admin/profile/ProfileLayout.vue"),
+        children: [
+          {
+            path: `${prefix}/profile/edit`,
+            name: `${prefixName}profile`,
+            meta: {
+              title: "profile",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Edit",
+                path: `${prefix}/profile/edit`,
+                goto: `${prefixName}profile-edit`,
+                // params: {
+                //   id: "id",
+                // },
+              },
+            },
+            component: () => import("@/views/admin/profile/ProfileEdit.vue"),
+          },
+        ],
+      },
+      {
         path: `${prefix}/produk`,
         name: `${prefixName}produk`,
         meta: {
