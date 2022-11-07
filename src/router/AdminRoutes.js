@@ -387,6 +387,71 @@ const AdminRoutes = [
           },
         ],
       },
+      {
+        path: `${prefix}/transaksi`,
+        name: `${prefixName}transaksi`,
+        meta: {
+          title: "transaksi",
+          icon: "mdi-home",
+          breadcrumb: {
+            name: "transaksi",
+            path: `${prefix}/transaksi`,
+            goto: `${prefixName}transaksi`,
+          },
+        },
+        redirect: `${prefix}/transaksi/index`,
+        component: () => import("@/views/admin/transaksi/TransaksiLayout.vue"),
+        children: [
+          {
+            path: `${prefix}/transaksi/index`,
+            name: `${prefixName}transaksi-index`,
+            meta: {
+              title: "transaksi",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Index",
+                path: `${prefix}/transaksi/index`,
+                goto: `${prefixName}transaksi-index`,
+              },
+            },
+            component: () =>
+              import("@/views/admin/transaksi/TransaksiIndex.vue"),
+          },
+          {
+            path: `${prefix}/transaksi/tambah`,
+            name: `${prefixName}transaksi-tambah`,
+            meta: {
+              title: "transaksi",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "tambah",
+                path: `${prefix}/transaksi/tambah`,
+                goto: `${prefixName}transaksi-tambah`,
+              },
+            },
+            component: () =>
+              import("@/views/admin/transaksi/TransaksiTambah.vue"),
+          },
+          {
+            path: `${prefix}/transaksi/edit/:id`,
+            name: `${prefixName}transaksi-edit`,
+            meta: {
+              title: "transaksi",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Edit",
+                path: `${prefix}/transaksi/edit`,
+                goto: `${prefixName}transaksi-edit`,
+                params: {
+                  id: "id",
+                },
+              },
+            },
+            component: () =>
+              import("@/views/admin/transaksi/TransaksiEdit.vue"),
+          },
+        ],
+      },
     ],
   },
 ];

@@ -14,7 +14,7 @@ import ButtonEdit from "@/components/Button/ButtonEdit.vue";
 import ButtonDelete from "@/components/Button/ButtonDel.vue";
 moment.updateLocale("id", localization);
 const storeAdmin = useStoreAdmin();
-storeAdmin.setPagesActive("restok");
+storeAdmin.setPagesActive("transaksi");
 
 const columns = [
     {
@@ -57,11 +57,11 @@ const onApply = async (values) => {
     };
     // console.log(dataForm);
     try {
-        const response = await Api.post(`admin/label`, dataStore);
+        const response = await Api.post(`admin/transaksi`, dataStore);
         console.log(response);
         // data.id = response.id;
         Toast.success("Info", "Data berhasil ditambahkan!");
-        router.push({ name: "admin-label" });
+        router.push({ name: "admin-transaksi" });
 
         return true;
     } catch (error) {
@@ -78,11 +78,11 @@ const onSubmit = async (values) => {
     };
     // console.log(dataForm);
     try {
-        const response = await Api.post(`admin/label`, dataStore);
+        const response = await Api.post(`admin/transaksi`, dataStore);
         console.log(response);
         // data.id = response.id;
         Toast.success("Info", "Data berhasil ditambahkan!");
-        router.push({ name: "admin-label" });
+        router.push({ name: "admin-transaksi" });
 
         return true;
     } catch (error) {
@@ -96,19 +96,10 @@ const onSubmit = async (values) => {
         // dari localStorage
         <Form v-slot="{ errors }" @submit="onApply">
             <div class="py-2 lg:py-4 px-4 grid grid-cols-3">
+
                 <div class="space-y-4">
                     <div class="flex flex-col">
-                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Nama Toko</label>
-                        <Field v-model="dataDetail.namatoko" :rules="fnValidasi.validateData" type="text"
-                            name="namatoko" ref="namatoko" class="input input-bordered md:w-full max-w-md" required />
-                        <div class="text-xs text-red-600 mt-1">
-                            {{ errors.namatoko }}
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex flex-col">
-                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Tanggal Pembelian</label>
+                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Tanggal Transaksi</label>
                         <Field v-model="dataDetail.nama" :rules="fnValidasi.validateData" type="text" name="nama"
                             ref="nama" class="input input-bordered md:w-full max-w-md" required />
                         <div class="text-xs text-red-600 mt-1">
@@ -118,7 +109,9 @@ const onSubmit = async (values) => {
                 </div>
                 <div class="space-y-4">
                     <div class="flex flex-col">
-                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Penanggungjawab</label>
+                        <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Penanggungjawab
+                            //pegawai
+                        </label>
                         <Field v-model="dataDetail.penanggungjawab" :rules="fnValidasi.validateData" type="text"
                             name="penanggungjawab" ref="penanggungjawab" class="input input-bordered md:w-full max-w-md"
                             required />
@@ -150,6 +143,14 @@ const onSubmit = async (values) => {
                                 name: 'admin-produk-tambah',
                             }">
                                 <button class="btn btn-danger">Tambah Produk</button>
+                            </router-link>
+                        </label>
+                        <label for="name" class="text-sm font-sm italic text-red-500 block mb-2">
+                            Jika produk kosong / habis ?
+                            <router-link :to="{
+                                name: 'admin-produk-tambah',
+                            }">
+                                <button class="btn btn-danger">Restok Produk</button>
                             </router-link>
                         </label>
                         // Pencarian ke table produk
@@ -232,7 +233,7 @@ const onSubmit = async (values) => {
             </div>
             <div class="">
                 <div>
-                    <h4 class="font-bold text-xl py-2">Keranjang Restok
+                    <h4 class="font-bold text-xl py-2">Keranjang Transaksi
                         // dari localStorage
                     </h4>
                     <h4>Total Jenis Barang : </h4>
