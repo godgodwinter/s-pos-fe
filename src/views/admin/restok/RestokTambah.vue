@@ -177,11 +177,15 @@ const addToCart = (id) => {
 const doKeranjangEditBarang = (id, index) => {
     let temp = dataKeranjang.value.filter(item => { return item.id === id });
     formEdit.value = true;
+    dataFormKeranjang.value.id = id;
+    dataFormKeranjang.value.index = index;
     // console.log(id, index);
     console.log(temp[0]);
     // tampilkan modal edit
     // update data
     // simpan where id
+    dataFormKeranjang.value.jml = dataKeranjang.value[index].jml;
+    dataFormKeranjang.value.harga_beli = dataKeranjang.value[index].harga_beli;
 }
 const doKeranjangDeleteBarang = (id, index) => {
     let temp = dataKeranjang.value.filter(item => { return item.id !== id });
@@ -191,16 +195,21 @@ const doKeranjangDeleteBarang = (id, index) => {
 }
 const babengRupiah = (angka = 0) => {
     // console.log(angka);
-    dataDetail.value.harga_jual_default = Fungsi.formatRupiah(angka, 'Rp. ');
+    dataFormKeranjang.value.harga_beli = Fungsi.formatRupiah(angka, 'Rp. ');
     // console.log(dataDetail.value.harga_jual_default.match(numberPattern).join(''));
 }
 
 const formEdit = ref(false);
+const dataFormKeranjang = ref({});
 const onKeranjangUpdateBarang = async (values) => {
-    console.log(values);
+    // console.log(dataFormKeranjang.value);
+    dataKeranjang.value[dataFormKeranjang.value.index].jml = dataFormKeranjang.value.jml;
+    dataKeranjang.value[dataFormKeranjang.value.index].harga_beli = dataFormKeranjang.value.harga_beli;
+    onFormEditBatal();
 }
 const onFormEditBatal = () => {
     formEdit.value = false;
+    dataFormKeranjang.value = {};
 }
 </script>
 <template>
@@ -399,9 +408,9 @@ const onFormEditBatal = () => {
                                 <div class="flex flex-col">
                                     <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Jumlah
                                         Barang</label>
-                                    <Field v-model="dataDetail.jml" :rules="fnValidasi.validateDataRupiah" type="text"
-                                        name="jml" ref="jml" class="input input-bordered md:w-full max-w-2xl"
-                                        required />
+                                    <Field v-model="dataFormKeranjang.jml" :rules="fnValidasi.validateDataRupiah"
+                                        type="text" name="jml" ref="jml"
+                                        class="input input-bordered md:w-full max-w-2xl" required />
                                     <div class="text-xs text-red-600 mt-1">
                                         {{ errors.jml }}
                                     </div>
@@ -412,12 +421,12 @@ const onFormEditBatal = () => {
                                     Rupiah
                                     <!-- {{ labelRupiah }}  -->
                                 </label>
-                                <Field v-model="dataDetail.harga_jual_default" :rules="fnValidasi.validateData"
-                                    type="text" name="harga_jual_default" ref="harga_jual_default"
+                                <Field v-model="dataFormKeranjang.harga_beli" :rules="fnValidasi.validateData"
+                                    type="text" name="harga_beli" ref="harga_beli"
                                     class="input input-bordered md:w-full max-w-2xl" required
-                                    @keyup="babengRupiah(dataDetail.harga_jual_default)" />
+                                    @keyup="babengRupiah(dataFormKeranjang.harga_beli)" />
                                 <div class="text-xs text-red-600 mt-1">
-                                    {{ errors.harga_jual_default }}
+                                    {{ errors.harga_beli }}
                                 </div>
                             </div>
                         </div>
