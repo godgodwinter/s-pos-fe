@@ -12,6 +12,8 @@ import moment from "moment/min/moment-with-locales";
 import localization from "moment/locale/id";
 import ButtonEdit from "@/components/Button/ButtonEdit.vue";
 import ButtonDelete from "@/components/Button/ButtonDel.vue";
+import IconProduct from "@/components/Icons/IconMonstrProduct.vue";
+import Fungsi from "@/components/lib/FungsiCampur";
 moment.updateLocale("id", localization);
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("restok");
@@ -42,28 +44,42 @@ const columns = [
     },
 ];
 
-const dataAsli = ref([]);
-const data = ref([]);
 const router = useRouter();
-const dataDetail = ref({});
-const dataForm = ref({});
+const dataDetail = ref({
+    namatoko: "",
+    tglbeli: moment().format("YYYY-MM-DD"),
+    penanggungjawab: { label: null, id: null },
+});
+
+const getDataFromLocalStorage = () => {
+    let temp = localStorage.getItem("dataRestok");
+    if (temp) {
+        dataDetail.value = JSON.parse(temp);
+    }
+};
+getDataFromLocalStorage();
+
 // simpan sementara untuk lanjut ke proses Keranjang
 const onApply = async (values) => {
-    // console.log(values);
-    let dataStore = {
-        namatoko: dataDetail.value.namatoko,
-        tglbeli: dataDetail.value.tglbeli,
-        penanggungjawab: dataDetail.value.penanggungjawab,
-    };
     // console.log(dataForm);
     try {
-        const response = await Api.post(`admin/label`, dataStore);
-        console.log(response);
-        // data.id = response.id;
-        Toast.success("Info", "Data berhasil ditambahkan!");
-        router.push({ name: "admin-label" });
+        // console.log(dataStore);
+        if (dataDetail.value.data_penanggungjawab.id == null) {
+            Toast.danger("Error", "Pilih Penanggungjawab terlebih dahulu!");
+        } else {
+            // console.log(values);
+            let dataStore = {
+                namatoko: dataDetail.value.namatoko,
+                tglbeli: dataDetail.value.tglbeli,
+                penanggungjawab: dataDetail.value.data_penanggungjawab.id,
+                data_penanggungjawab: dataDetail.value.data_penanggungjawab,
+                dataKeranjang: [],
+            };
+            localStorage.setItem("dataRestok", JSON.stringify(dataStore));
+            Toast.babeng("Info", "Berhasil di terapkan!");
 
-        return true;
+        }
+
     } catch (error) {
         console.error(error);
     }
@@ -89,11 +105,108 @@ const onSubmit = async (values) => {
         console.error(error);
     }
 };
+const dataPegawai = ref([]);
+let pilihPegawai = ref([]);
+const getDataPegawai = async () => {
+    try {
+        const response = await Api.get(`admin/pegawai`);
+        // console.log(response);
+        dataPegawai.value = response.data;
+        dataPegawai.value.forEach((item) => {
+            pilihPegawai.value.push({
+                label: item.nama,
+                id: item.id,
+            });
+        });
+        return response;
+    } catch (error) {
+        Toast.danger("Warning", "Data Gagal dimuat");
+        console.error(error);
+    }
+};
+getDataPegawai();
+const onReset = async () => {
+    dataDetail.value.namatoko = "";
+    dataDetail.value.tglbeli = moment().format("YYYY-MM-DD");
+    dataDetail.value.data_penanggungjawab = { label: null, id: null };
+    localStorage.removeItem("dataRestok");
+}
+
+const dataAsli = ref([]);
+const data = ref([]);
+const getData = async () => {
+    try {
+        const response = await Api.get(`admin/produk`);
+        dataAsli.value = response.data;
+        data.value = response.data;
+
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+getData();
+const inputCariProduk = ref('');
+const onCariProduk = async () => {
+    let input = inputCariProduk.value.trim().toLowerCase();
+    let result = dataAsli.value.filter(item => { return item.nama.toLowerCase().includes(input) });
+    data.value = result;
+    // console.log(result);
+    // getDataProduk where nama produk=== inputan
+}
+
+const dataKeranjang = ref([]);
+
+const addToCart = (id) => {
+    // 1. ambil data where id dari dataAsli
+    let temp = dataAsli.value.filter(item => { return item.id === id; });
+    // 2. push ke dalam array dataKeranjang;
+    // periksa jika sudah ada tampilkan notif
+    let periksa = dataKeranjang.value.filter(item => { return item.id === id });
+    if (periksa.length > 0) {
+        Toast.warning("Peringatan", "Barang sudah ada di keranjang!");
+    } else {
+        // console.log(temp[0]);
+        dataKeranjang.value.push(temp[0]);
+        Toast.babeng("Info", "Barang berhasil ditambahkan!");
+
+    }
+    // console.log(id);
+}
+
+const doKeranjangEditBarang = (id, index) => {
+    let temp = dataKeranjang.value.filter(item => { return item.id === id });
+    formEdit.value = true;
+    // console.log(id, index);
+    console.log(temp[0]);
+    // tampilkan modal edit
+    // update data
+    // simpan where id
+}
+const doKeranjangDeleteBarang = (id, index) => {
+    let temp = dataKeranjang.value.filter(item => { return item.id !== id });
+    // console.log(dataKeranjang.value, temp, id);
+    dataKeranjang.value = temp;
+    // console.log(temp);
+}
+const babengRupiah = (angka = 0) => {
+    // console.log(angka);
+    dataDetail.value.harga_jual_default = Fungsi.formatRupiah(angka, 'Rp. ');
+    // console.log(dataDetail.value.harga_jual_default.match(numberPattern).join(''));
+}
+
+const formEdit = ref(false);
+const onKeranjangUpdateBarang = async (values) => {
+    console.log(values);
+}
+const onFormEditBatal = () => {
+    formEdit.value = false;
+}
 </script>
 <template>
     <BreadCrumb />
+
     <div class="shadow shadow-lg">
-        // dari localStorage
         <Form v-slot="{ errors }" @submit="onApply">
             <div class="py-2 lg:py-4 px-4 grid grid-cols-3">
                 <div class="space-y-4">
@@ -109,8 +222,8 @@ const onSubmit = async (values) => {
                 <div class="space-y-4">
                     <div class="flex flex-col">
                         <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Tanggal Pembelian</label>
-                        <Field v-model="dataDetail.nama" :rules="fnValidasi.validateData" type="text" name="nama"
-                            ref="nama" class="input input-bordered md:w-full max-w-md" required />
+                        <Field :rules="fnValidasi.validateData" v-model="dataDetail.tglbeli" name="tglbeli" type="date"
+                            class="input input-bordered w-11/12" />
                         <div class="text-xs text-red-600 mt-1">
                             {{ errors.nama }}
                         </div>
@@ -119,9 +232,10 @@ const onSubmit = async (values) => {
                 <div class="space-y-4">
                     <div class="flex flex-col">
                         <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Penanggungjawab</label>
-                        <Field v-model="dataDetail.penanggungjawab" :rules="fnValidasi.validateData" type="text"
-                            name="penanggungjawab" ref="penanggungjawab" class="input input-bordered md:w-full max-w-md"
-                            required />
+
+                        <v-select class="py-2 px-3 w-72 mx-auto md:mx-0" :options="pilihPegawai"
+                            :rules="fnValidasi.validateData" v-model="dataDetail.data_penanggungjawab"
+                            v-bind:class="{ disabled: false }"></v-select>
                         <div class="text-xs text-red-600 mt-1">
                             {{ errors.penanggungjawab }}
                         </div>
@@ -132,7 +246,7 @@ const onSubmit = async (values) => {
             <div class="w-full flex justify-end py-10 px-10 gap-4">
                 <!-- <span class="btn btn-secondary">Batal</span> -->
                 <button class="btn btn-primary">Apply</button>
-                <button class="btn btn-danger">RESET</button>
+                <button class="btn btn-danger" @click="onReset()">RESET</button>
             </div>
         </Form>
     </div>
@@ -152,12 +266,12 @@ const onSubmit = async (values) => {
                                 <button class="btn btn-danger">Tambah Produk</button>
                             </router-link>
                         </label>
-                        // Pencarian ke table produk
                         <div class="space-y-4  w-full py-4">
                             <div class="form-control">
                                 <div class="input-group">
-                                    <input type="text" placeholder="Cari Produk ..."
-                                        class="input input-bordered max-w-lg w-full" />
+                                    <Field :rules="fnValidasi.validateData" v-model="inputCariProduk"
+                                        name="inputCariProduk" type="text" placeholder="Cari Produk ..."
+                                        class="input input-bordered max-w-lg w-full" @keyup="onCariProduk()" />
                                     <button class="btn btn-square">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
@@ -178,41 +292,42 @@ const onSubmit = async (values) => {
                             <!-- head -->
                             <thead>
                                 <tr>
-                                    <th>Action</th>
+                                    <th>No</th>
                                     <th>Nama Produk</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- row 1 -->
-                                <tr>
+                                <tr v-for="d, index in data">
                                     <th>
                                         <label>
-                                            <ButtonEdit @click="doEditData(props.row.id, props.index)" />
-                                            <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
+                                            {{ index + 1 }}
                                         </label>
                                     </th>
                                     <td>
                                         <div class="flex items-center space-x-3">
                                             <div class="avatar">
                                                 <div class="mask mask-squircle w-12 h-12">
-                                                    <img src="/tailwind-css-component-profile-2@56w.png"
-                                                        alt="Avatar Tailwind CSS Component" />
+                                                    <!-- <img src="/tailwind-css-component-profile-2@56w.png"
+                                                        alt="Avatar Tailwind CSS Component" /> -->
+                                                    <IconProduct />
                                                 </div>
                                             </div>
                                             <div>
-                                                <div class="font-bold">Jam 1 </div>
+                                                <div class="font-bold">{{ d.nama }}</div>
                                                 <div class="space-x-1">
-                                                    <span class="badge badge-ghost badge-sm">Desktop
+                                                    <span class="badge badge-ghost badge-sm">Kategori 1
                                                     </span>
-                                                    <span class="badge badge-ghost badge-sm"> Support
+                                                    <span class="badge badge-ghost badge-sm"> Kategori 2
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
                                     <th>
-                                        <button class="btn btn-ghost btn-xs">details</button>
+                                        <button class="btn btn-warning btn-xs" @click="addToCart(d.id)">Add to
+                                            Keranjang</button>
                                     </th>
                                 </tr>
                             </tbody>
@@ -233,7 +348,6 @@ const onSubmit = async (values) => {
             <div class="">
                 <div>
                     <h4 class="font-bold text-xl py-2">Keranjang Restok
-                        // dari localStorage
                     </h4>
                     <h4>Total Jenis Barang : </h4>
                     <h4>Total Barang : </h4>
@@ -241,7 +355,7 @@ const onSubmit = async (values) => {
                 </div>
                 <div>
 
-                    <vue-good-table :line-numbers="true" :columns="columns" :rows="data" :search-options="{
+                    <vue-good-table :line-numbers="true" :columns="columns" :rows="dataKeranjang" :search-options="{
                         enabled: true,
                     }" :pagination-options="{
     enabled: true,
@@ -266,8 +380,8 @@ const onSubmit = async (values) => {
                         <template #table-row="props">
                             <span v-if="props.column.field == 'actions'">
                                 <div class="text-sm font-medium text-center flex justify-center space-x-1">
-                                    <ButtonEdit @click="doEditData(props.row.id, props.index)" />
-                                    <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
+                                    <ButtonEdit @click="doKeranjangEditBarang(props.row.id, props.index)" />
+                                    <ButtonDelete @click="doKeranjangDeleteBarang(props.row.id, props.index)" />
                                 </div>
                             </span>
 
@@ -277,12 +391,50 @@ const onSubmit = async (values) => {
                         </template>
                     </vue-good-table>
                 </div>
+                <!-- FORM-EDIT KERANJANG -->
+                <div v-if="formEdit">
+                    <Form v-slot="{ errors }" @submit="onKeranjangUpdateBarang()">
+                        <div class="py-2 lg:py-4 px-4">
+                            <div class="space-y-4">
+                                <div class="flex flex-col">
+                                    <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Jumlah
+                                        Barang</label>
+                                    <Field v-model="dataDetail.jml" :rules="fnValidasi.validateDataRupiah" type="text"
+                                        name="jml" ref="jml" class="input input-bordered md:w-full max-w-2xl"
+                                        required />
+                                    <div class="text-xs text-red-600 mt-1">
+                                        {{ errors.jml }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col">
+                                <label for="name" class="text-sm font-medium text-gray-900 block mb-2">Harga Pembelian :
+                                    Rupiah
+                                    <!-- {{ labelRupiah }}  -->
+                                </label>
+                                <Field v-model="dataDetail.harga_jual_default" :rules="fnValidasi.validateData"
+                                    type="text" name="harga_jual_default" ref="harga_jual_default"
+                                    class="input input-bordered md:w-full max-w-2xl" required
+                                    @keyup="babengRupiah(dataDetail.harga_jual_default)" />
+                                <div class="text-xs text-red-600 mt-1">
+                                    {{ errors.harga_jual_default }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-full flex justify-end py-10 px-10 gap-4">
+                            <!-- <span class="btn btn-secondary">Batal</span> -->
+                            <button class="btn btn-primary">Simpan</button>
+                            <button class="btn btn-danger" @click="onFormEditBatal()">Batal</button>
+                        </div>
+                    </Form>
+                </div>
             </div>
         </div>
         <div class="w-full flex justify-end py-10 px-10 gap-4">
             <!-- <span class="btn btn-secondary">Batal</span> -->
-            <button class="btn btn-primary">Apply</button>
-            <button class="btn btn-danger">RESET</button>
+            <button class="btn btn-primary">Apply KERANJANG</button>
+            <button class="btn btn-danger">RESET KERANJANG</button>
         </div>
         <div class="w-full flex justify-end py-10 px-10 gap-4">
             <button class="btn btn-success">SIMPAN</button>

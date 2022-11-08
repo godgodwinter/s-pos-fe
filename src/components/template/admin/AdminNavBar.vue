@@ -26,16 +26,21 @@ window.addEventListener("scroll", onScroll);
     }">
       <div class="flex lg:justify-center px-10 mx-4 overflow-hidden w-full justify-center">
         <div class="py-2 border-r inline-block border-r-white last:border-none">
-          <button
-            class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
-            Transaksi
-          </button>
+          <router-link :to="{ name: 'admin-transaksi-tambah' }">
+            <button
+              class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
+              Transaksi
+            </button>
+          </router-link>
         </div>
         <div class="py-2 border-r inline-block border-r-white last:border-none">
-          <button
-            class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
-            Restok
-          </button>
+
+          <router-link :to="{ name: 'admin-restok-tambah' }">
+            <button
+              class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
+              Restok
+            </button>
+          </router-link>
         </div>
 
         <button v-if="theme == 'cupcake'" @click="doUpdateTheme('dark')"
