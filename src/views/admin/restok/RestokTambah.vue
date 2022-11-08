@@ -18,6 +18,7 @@ moment.updateLocale("id", localization);
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("restok");
 
+const numberPattern = /\d+/g;
 const columns = [
     {
         label: "Actions",
@@ -199,6 +200,7 @@ const doKeranjangEditBarang = (id, index) => {
     // simpan where id
     dataFormKeranjang.value.jml = dataKeranjang.value[index].jml;
     dataFormKeranjang.value.harga_beli = dataKeranjang.value[index].harga_beli;
+    // dataFormKeranjang.value.harga_beli_number = dataKeranjang.value[index].harga_beli.match(numberPattern).join('');
 }
 const doKeranjangDeleteBarang = (id, index) => {
     let temp = dataKeranjang.value.filter(item => { return item.id !== id });
@@ -218,6 +220,7 @@ const onKeranjangUpdateBarang = async (values) => {
     // console.log(dataFormKeranjang.value);
     dataKeranjang.value[dataFormKeranjang.value.index].jml = dataFormKeranjang.value.jml;
     dataKeranjang.value[dataFormKeranjang.value.index].harga_beli = dataFormKeranjang.value.harga_beli;
+    dataKeranjang.value[dataFormKeranjang.value.index].harga_beli_number = dataFormKeranjang.value.harga_beli.match(numberPattern).join('');
     onFormEditBatal();
 }
 const onFormEditBatal = () => {
@@ -226,13 +229,39 @@ const onFormEditBatal = () => {
 }
 
 const onResetDataKeranjang = () => {
+    let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
     dataKeranjang.value = [];
+    getTemp.dataKeranjang = dataKeranjang.value;
+    localStorage.setItem("dataRestok", JSON.stringify(getTemp));
 }
 const onApplyDataKeranjang = () => {
     let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
     getTemp.dataKeranjang = dataKeranjang.value;
     localStorage.setItem("dataRestok", JSON.stringify(getTemp));
     console.log(getTemp);
+}
+
+const doSimpan = async () => {
+    let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
+    let dataStore = {
+        namatoko: getTemp.namatoko,
+        tglbeli: getTemp.tglbeli,
+        penanggungjawab: getTemp.penanggungjawab,
+        dataKeranjang: dataKeranjang.value
+    };
+    console.log(dataStore);
+    try {
+        const response = await Api.post(`admin/restok`, dataStore);
+        console.log(response);
+        // // data.id = response.id;
+        // Toast.success("Info", "Data berhasil ditambahkan!");
+        // router.push({ name: "admin-label" });
+        Toast.babeng("Info", "Data berhasil disimpan!")
+        onResetDataKeranjang();
+        return true;
+    } catch (error) {
+        console.error(error);
+    }
 }
 </script>
 <template>
@@ -469,7 +498,7 @@ const onApplyDataKeranjang = () => {
             <button class="btn btn-danger" @click="onResetDataKeranjang()">RESET KERANJANG</button>
         </div>
         <div class="w-full flex justify-end py-10 px-10 gap-4">
-            <button class="btn btn-success">SIMPAN</button>
+            <button class="btn btn-success" @click="doSimpan()">SIMPAN</button>
         </div>
     </div>
 
