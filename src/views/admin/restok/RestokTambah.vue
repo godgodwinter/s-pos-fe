@@ -68,12 +68,18 @@ const onApply = async (values) => {
             Toast.danger("Error", "Pilih Penanggungjawab terlebih dahulu!");
         } else {
             // console.log(values);
+
+            let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
+            let tempDataKeranjang = [];
+            if (getTemp.dataKeranjang.length > 0) {
+                tempDataKeranjang = getTemp.dataKeranjang;
+            }
             let dataStore = {
                 namatoko: dataDetail.value.namatoko,
                 tglbeli: dataDetail.value.tglbeli,
                 penanggungjawab: dataDetail.value.data_penanggungjawab.id,
                 data_penanggungjawab: dataDetail.value.data_penanggungjawab,
-                dataKeranjang: [],
+                dataKeranjang: tempDataKeranjang,
             };
             localStorage.setItem("dataRestok", JSON.stringify(dataStore));
             Toast.babeng("Info", "Berhasil di terapkan!");
@@ -156,6 +162,13 @@ const onCariProduk = async () => {
 }
 
 const dataKeranjang = ref([]);
+const periksaKeranjang = () => {
+    let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
+    if (getTemp.dataKeranjang.length > 0) {
+        dataKeranjang.value = getTemp.dataKeranjang;
+    }
+}
+periksaKeranjang();
 
 const addToCart = (id) => {
     // 1. ambil data where id dari dataAsli
@@ -210,6 +223,16 @@ const onKeranjangUpdateBarang = async (values) => {
 const onFormEditBatal = () => {
     formEdit.value = false;
     dataFormKeranjang.value = {};
+}
+
+const onResetDataKeranjang = () => {
+    dataKeranjang.value = [];
+}
+const onApplyDataKeranjang = () => {
+    let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
+    getTemp.dataKeranjang = dataKeranjang.value;
+    localStorage.setItem("dataRestok", JSON.stringify(getTemp));
+    console.log(getTemp);
 }
 </script>
 <template>
@@ -442,8 +465,8 @@ const onFormEditBatal = () => {
         </div>
         <div class="w-full flex justify-end py-10 px-10 gap-4">
             <!-- <span class="btn btn-secondary">Batal</span> -->
-            <button class="btn btn-primary">Apply KERANJANG</button>
-            <button class="btn btn-danger">RESET KERANJANG</button>
+            <button class="btn btn-primary" @click="onApplyDataKeranjang()">Apply KERANJANG</button>
+            <button class="btn btn-danger" @click="onResetDataKeranjang()">RESET KERANJANG</button>
         </div>
         <div class="w-full flex justify-end py-10 px-10 gap-4">
             <button class="btn btn-success">SIMPAN</button>
