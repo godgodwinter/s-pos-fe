@@ -181,6 +181,9 @@ const addToCart = (id) => {
         Toast.warning("Peringatan", "Barang sudah ada di keranjang!");
     } else {
         // console.log(temp[0]);
+        temp[0].jml = 0;
+        temp[0].harga_beli = "Rp. 0 ";
+        temp[0].harga_beli_number = 0;
         dataKeranjang.value.push(temp[0]);
         Toast.babeng("Info", "Barang berhasil ditambahkan!");
 
