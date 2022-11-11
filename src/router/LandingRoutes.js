@@ -30,20 +30,20 @@ const LandingRoutes = [
         name: "homeIndex",
         component: () => import("@/views/landing/HomeView.vue"),
       },
-      {
-        path: "/about",
-        name: "about",
-        component: () => import("@/views/landing/AboutView.vue"),
-        meta: {
-          title: "About",
-          breadcrumb: {
-            name: "About",
-            path: `/about`,
-            goto: "about",
-            icon: "account_circle",
-          },
-        },
-      },
+      // {
+      //   path: "/about",
+      //   name: "about",
+      //   component: () => import("@/views/landing/AboutView.vue"),
+      //   meta: {
+      //     title: "About",
+      //     breadcrumb: {
+      //       name: "About",
+      //       path: `/about`,
+      //       goto: "about",
+      //       icon: "account_circle",
+      //     },
+      //   },
+      // },
       {
         path: "/login",
         name: "login",

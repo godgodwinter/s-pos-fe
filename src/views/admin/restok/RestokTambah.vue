@@ -12,7 +12,7 @@ import moment from "moment/min/moment-with-locales";
 import localization from "moment/locale/id";
 import ButtonEdit from "@/components/Button/ButtonEdit.vue";
 import ButtonDelete from "@/components/Button/ButtonDel.vue";
-import IconProduct from "@/components/Icons/IconMonstrProduct.vue";
+import IconProduct from "@/components/icons/IconMonstrProduct.vue";
 import Fungsi from "@/components/lib/FungsiCampur";
 moment.updateLocale("id", localization);
 const storeAdmin = useStoreAdmin();
