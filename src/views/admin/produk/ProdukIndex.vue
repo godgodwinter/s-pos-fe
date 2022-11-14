@@ -52,6 +52,16 @@ const columns = [
         field: "berat",
         type: "String",
     },
+    {
+        label: "Stok Total",
+        field: "stok_total",
+        type: "String",
+    },
+    {
+        label: "Stok Terjual",
+        field: "stok_terjual",
+        type: "String",
+    },
 ];
 
 const dataAsli = ref([]);
