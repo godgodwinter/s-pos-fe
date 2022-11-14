@@ -247,13 +247,16 @@ const onFormEditBatal = () => {
     dataFormKeranjang.value = {};
 }
 
-const onResetDataKeranjang = () => {
+const onResetDataKeranjangClick = () => {
     if (confirm("Apakah anda yakin Reset data ini?")) {
-        let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
-        dataKeranjang.value = [];
-        getTemp.dataKeranjang = dataKeranjang.value;
-        localStorage.setItem("dataRestok", JSON.stringify(getTemp));
+        onResetDataKeranjang();
     }
+}
+const onResetDataKeranjang = () => {
+    let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
+    dataKeranjang.value = [];
+    getTemp.dataKeranjang = dataKeranjang.value;
+    localStorage.setItem("dataRestok", JSON.stringify(getTemp));
 }
 const onApplyDataKeranjang = () => {
     let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
@@ -522,7 +525,7 @@ const doSimpan = async () => {
         <div class="w-full flex justify-end py-10 px-10 gap-4">
             <!-- <span class="btn btn-secondary">Batal</span> -->
             <button class="btn btn-primary" @click="onApplyDataKeranjang()">Apply KERANJANG</button>
-            <button class="btn btn-danger" @click="onResetDataKeranjang()">RESET KERANJANG</button>
+            <button class="btn btn-danger" @click="onResetDataKeranjangClick()">RESET KERANJANG</button>
         </div>
         <div class="w-full flex justify-end py-10 px-10 gap-4">
             <button class="btn btn-success" @click="doSimpan()">SIMPAN</button>

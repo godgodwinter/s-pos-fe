@@ -281,13 +281,17 @@ const onFormEditBatal = () => {
     };
 }
 
-const onResetDataKeranjang = () => {
+const onResetDataKeranjangClick = () => {
     if (confirm("Apakah anda yakin Reset data ini?")) {
-        let getTemp = JSON.parse(localStorage.getItem("dataTransaksi"));
-        dataKeranjang.value = [];
-        getTemp.dataKeranjang = dataKeranjang.value;
-        localStorage.setItem("dataTransaksi", JSON.stringify(getTemp));
+        onResetDataKeranjang();
     }
+}
+
+const onResetDataKeranjang = () => {
+    let getTemp = JSON.parse(localStorage.getItem("dataTransaksi"));
+    dataKeranjang.value = [];
+    getTemp.dataKeranjang = dataKeranjang.value;
+    localStorage.setItem("dataTransaksi", JSON.stringify(getTemp));
 }
 const onApplyDataKeranjang = () => {
     let getTemp = JSON.parse(localStorage.getItem("dataTransaksi"));
@@ -303,7 +307,7 @@ const dataFormKonfirmasiBayar = ref({
     uangBayar: "Rp. 0",
     uangBayar_number: 0,
     uangKembalian: 0,
-    statusSimpan: false,
+    statusSimpan: false, //default: false
 });
 
 const onPeriksaBayar = async (values) => {
@@ -341,23 +345,27 @@ const doSimpan = async () => {
     if (confirm("Apakah anda yakin menyimpan data ini?")) {
         if (dataFormKeranjang.value.statusSimpan) {
             let getTemp = JSON.parse(localStorage.getItem("dataTransaksi"));
+            let totalTagihan = fnGetTotalTagihan();
+            let kembalian = fnPeriksaPembayaran(dataFormKonfirmasiBayar.value.uangBayar_number);
             let dataStore = {
-                namatoko: getTemp.namatoko,
                 tglbeli: getTemp.tglbeli,
                 penanggungjawab: getTemp.penanggungjawab,
-                dataKeranjang: dataKeranjang.value
+                dataKeranjang: dataKeranjang.value,
+                total_bayar: totalTagihan,
+                dibayar: dataFormKonfirmasiBayar.value.uangBayar_number,
+                kembalian: kembalian < 0 ? kembalian * -1 : kembalian,
             };
-            console.log(dataStore);
+            // console.log(dataStore);
             try {
-                Toast.babeng("SIMPAN!")
-                // const response = await Api.post(`admin/transaksi`, dataStore);
+                // Toast.babeng("SIMPAN!")
+                const response = await Api.post(`admin/transaksi`, dataStore);
                 // console.log(response);
-                // // // data.id = response.id;
-                // // Toast.success("Info", "Data berhasil ditambahkan!");
-                // // router.push({ name: "admin-label" });
-                // Toast.babeng("Info", "Data berhasil disimpan!")
-                // onResetDataKeranjang();
-                // return true;
+                // // data.id = response.id;
+                // Toast.success("Info", "Data berhasil ditambahkan!");
+                router.push({ name: "admin-transaksi" });
+                Toast.babeng("Info", "Data berhasil disimpan!")
+                onResetDataKeranjang();
+                return true;
             } catch (error) {
                 console.error(error);
             }
@@ -513,8 +521,10 @@ const doSimpan = async () => {
                             <!-- foot -->
                             <tfoot>
                                 <tr>
-                                    <th>Action</th>
+                                    <th>No</th>
                                     <th>Nama Produk</th>
+                                    <th>Stok</th>
+                                    <th>Harga Default (Ditampilkan)</th>
                                     <th></th>
                                 </tr>
                             </tfoot>
@@ -616,7 +626,7 @@ const doSimpan = async () => {
         <div class="w-full flex justify-end py-10 px-10 gap-4">
             <!-- <span class="btn btn-secondary">Batal</span> -->
             <button class="btn btn-primary" @click="onApplyDataKeranjang()">Apply KERANJANG</button>
-            <button class="btn btn-danger" @click="onResetDataKeranjang()">RESET KERANJANG</button>
+            <button class="btn btn-danger" @click="onResetDataKeranjangClick()">RESET KERANJANG</button>
         </div>
         <div class="w-full flex justify-end py-10 px-10 gap-4">
 
