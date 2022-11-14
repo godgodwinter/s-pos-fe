@@ -1,6 +1,5 @@
 <script setup>
 /* eslint-disable */
-import QrcodeVue from 'qrcode.vue'
 import Api from "@/axios/axios";
 import { ref } from "vue";
 import BreadCrumb from "@/components/breadcrumb/BabengBreadcrumb.vue"
@@ -29,13 +28,18 @@ const columns = [
         type: "String",
     },
     {
+        label: "Harga (Ditampilkan)",
+        field: "harga_jual_default",
+        type: "String",
+    },
+    {
         label: "Stok Tersedia",
         field: "stok_tersedia",
         type: "String",
     },
     {
-        label: "Harga",
-        field: "harga_jual_default",
+        label: "Harga Pembelian (Avg)",
+        field: "harga_beli_avg",
         type: "String",
     },
     {
@@ -84,15 +88,12 @@ const doDeleteData = async (id, index) => {
 };
 
 
-let value = 'https://example.com';
-let size = 300;
 
 </script>
 <template>
     <BreadCrumb />
     <!-- <h4>Ini Produk index</h4> -->
     <div>
-        <qrcode-vue :value="value" :size="size" level="H" />
         <vue-good-table :line-numbers="true" :columns="columns" :rows="data" :search-options="{
             enabled: true,
         }" :pagination-options="{
@@ -120,10 +121,15 @@ let size = 300;
                     <div class="text-sm font-medium text-center flex justify-center space-x-1">
                         <ButtonEdit @click="doEditData(props.row.id, props.index)" />
                         <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
+                        <button class="btn btn-xs tooltip btn-info" data-tip="Detail //QRCODE">D </button>
                     </div>
                 </span>
                 <span v-else-if="props.column.field == 'harga_jual_default'">
                     {{ Fungsi.formatRupiah(props.row.harga_jual_default, "Rp. ") }}
+
+                </span>
+                <span v-else-if="props.column.field == 'harga_beli_avg'">
+                    {{ Fungsi.formatRupiah(props.row.harga_beli_avg, "Rp. ") }}
 
                 </span>
 

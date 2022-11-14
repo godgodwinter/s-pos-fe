@@ -50,6 +50,7 @@ const dataDetail = ref({
     namatoko: "",
     tglbeli: moment().format("YYYY-MM-DD"),
     penanggungjawab: { label: null, id: null },
+    data_penanggungjawab: { label: null, id: null },
 });
 
 const getDataFromLocalStorage = () => {
@@ -72,7 +73,7 @@ const onApply = async (values) => {
 
             let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
             let tempDataKeranjang = [];
-            if (getTemp ) {
+            if (getTemp) {
 
                 if (getTemp.dataKeranjang.length > 0) {
                     tempDataKeranjang = getTemp.dataKeranjang;
@@ -135,10 +136,16 @@ const getDataPegawai = async () => {
     }
 };
 getDataPegawai();
+const onResetClick = async () => {
+    if (confirm("Apakah anda yakin Reset data ini?")) {
+        onReset();
+    }
+}
 const onReset = async () => {
     dataDetail.value.namatoko = "";
     dataDetail.value.tglbeli = moment().format("YYYY-MM-DD");
     dataDetail.value.data_penanggungjawab = { label: null, id: null };
+    dataDetail.value.penanggungjawab = { label: null, id: null };
     localStorage.removeItem("dataRestok");
 }
 
@@ -191,8 +198,8 @@ const addToCart = (id) => {
     } else {
         // console.log(temp[0]);
         temp[0].jml = 0;
-        temp[0].harga_beli = "Rp. 0 ";
-        temp[0].harga_beli_number = 0;
+        temp[0].harga_beli = Fungsi.formatRupiah(temp[0].harga_jual_default, 'Rp. ');
+        temp[0].harga_beli_number = temp[0].harga_jual_default;
         dataKeranjang.value.push(temp[0]);
         Toast.babeng("Info", "Barang berhasil ditambahkan!");
 
@@ -241,10 +248,12 @@ const onFormEditBatal = () => {
 }
 
 const onResetDataKeranjang = () => {
-    let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
-    dataKeranjang.value = [];
-    getTemp.dataKeranjang = dataKeranjang.value;
-    localStorage.setItem("dataRestok", JSON.stringify(getTemp));
+    if (confirm("Apakah anda yakin Reset data ini?")) {
+        let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
+        dataKeranjang.value = [];
+        getTemp.dataKeranjang = dataKeranjang.value;
+        localStorage.setItem("dataRestok", JSON.stringify(getTemp));
+    }
 }
 const onApplyDataKeranjang = () => {
     let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
@@ -254,25 +263,27 @@ const onApplyDataKeranjang = () => {
 }
 
 const doSimpan = async () => {
-    let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
-    let dataStore = {
-        namatoko: getTemp.namatoko,
-        tglbeli: getTemp.tglbeli,
-        penanggungjawab: getTemp.penanggungjawab,
-        dataKeranjang: dataKeranjang.value
-    };
-    console.log(dataStore);
-    try {
-        const response = await Api.post(`admin/restok`, dataStore);
-        console.log(response);
-        // // data.id = response.id;
-        // Toast.success("Info", "Data berhasil ditambahkan!");
-        // router.push({ name: "admin-label" });
-        Toast.babeng("Info", "Data berhasil disimpan!")
-        onResetDataKeranjang();
-        return true;
-    } catch (error) {
-        console.error(error);
+    if (confirm("Apakah anda yakin menyimpan data ini?")) {
+        let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
+        let dataStore = {
+            namatoko: getTemp.namatoko,
+            tglbeli: getTemp.tglbeli,
+            penanggungjawab: getTemp.penanggungjawab,
+            dataKeranjang: dataKeranjang.value
+        };
+        console.log(dataStore);
+        try {
+            const response = await Api.post(`admin/restok`, dataStore);
+            console.log(response);
+            // // data.id = response.id;
+            // Toast.success("Info", "Data berhasil ditambahkan!");
+            // router.push({ name: "admin-label" });
+            Toast.babeng("Info", "Data berhasil disimpan!")
+            onResetDataKeranjang();
+            return true;
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
 </script>
@@ -319,7 +330,7 @@ const doSimpan = async () => {
             <div class="w-full flex justify-end py-10 px-10 gap-4">
                 <!-- <span class="btn btn-secondary">Batal</span> -->
                 <button class="btn btn-primary">Apply</button>
-                <button class="btn btn-danger" @click="onReset()">RESET</button>
+                <span class="btn btn-danger" @click="onResetClick()">RESET</span>
             </div>
         </Form>
     </div>
@@ -367,6 +378,7 @@ const doSimpan = async () => {
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Produk</th>
+                                    <th>Harga Default (Ditampilkan)</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -397,6 +409,9 @@ const doSimpan = async () => {
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        {{ Fungsi.formatRupiah(d.harga_jual_default, "Rp. ") }}
                                     </td>
                                     <th>
                                         <button class="btn btn-warning btn-xs" @click="addToCart(d.id)">Add to
@@ -436,7 +451,7 @@ const doSimpan = async () => {
 }" styleClass="vgt-table striped bordered condensed" class="py-0">
                         <template #table-actions>
                             <div class="space-x-1 space-y-1 gap-1">
-                                <router-link :to="{
+                                <!-- <router-link :to="{
                                     name: 'admin-label-tambah',
                                 }">
                                     <button class="btn btn-sm btn-primary tooltip" data-tip="Tambah ">
@@ -447,7 +462,7 @@ const doSimpan = async () => {
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
-                                </router-link>
+                                </router-link> -->
                             </div>
                         </template>
                         <template #table-row="props">
