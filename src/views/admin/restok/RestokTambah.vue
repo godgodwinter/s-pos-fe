@@ -72,8 +72,11 @@ const onApply = async (values) => {
 
             let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
             let tempDataKeranjang = [];
-            if (getTemp.dataKeranjang.length > 0) {
-                tempDataKeranjang = getTemp.dataKeranjang;
+            if (getTemp ) {
+
+                if (getTemp.dataKeranjang.length > 0) {
+                    tempDataKeranjang = getTemp.dataKeranjang;
+                }
             }
             let dataStore = {
                 namatoko: dataDetail.value.namatoko,
@@ -164,9 +167,15 @@ const onCariProduk = async () => {
 
 const dataKeranjang = ref([]);
 const periksaKeranjang = () => {
+    let dataDefault = {
+        dataKeranjang: []
+    };
+    // let getTemp = JSON.parse(localStorage.getItem("dataRestok")) ? JSON.parse(localStorage.getItem("dataRestok")) : dataDefault;
     let getTemp = JSON.parse(localStorage.getItem("dataRestok"));
-    if (getTemp.dataKeranjang.length > 0) {
-        dataKeranjang.value = getTemp.dataKeranjang;
+    if (getTemp) {
+        if (getTemp.dataKeranjang.length > 0) {
+            dataKeranjang.value = getTemp.dataKeranjang;
+        }
     }
 }
 periksaKeranjang();

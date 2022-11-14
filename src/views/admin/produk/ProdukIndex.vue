@@ -1,5 +1,6 @@
 <script setup>
 /* eslint-disable */
+import QrcodeVue from 'qrcode.vue'
 import Api from "@/axios/axios";
 import { ref } from "vue";
 import BreadCrumb from "@/components/breadcrumb/BabengBreadcrumb.vue"
@@ -25,6 +26,11 @@ const columns = [
     {
         label: "Nama",
         field: "nama",
+        type: "String",
+    },
+    {
+        label: "Stok Tersedia",
+        field: "stok_tersedia",
         type: "String",
     },
     {
@@ -76,12 +82,17 @@ const doDeleteData = async (id, index) => {
         }
     }
 };
+
+
+let value = 'https://example.com';
+let size = 300;
+
 </script>
 <template>
     <BreadCrumb />
     <!-- <h4>Ini Produk index</h4> -->
     <div>
-
+        <qrcode-vue :value="value" :size="size" level="H" />
         <vue-good-table :line-numbers="true" :columns="columns" :rows="data" :search-options="{
             enabled: true,
         }" :pagination-options="{
@@ -121,5 +132,8 @@ const doDeleteData = async (id, index) => {
                 </span>
             </template>
         </vue-good-table>
+
+
     </div>
+
 </template>
