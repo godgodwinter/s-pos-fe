@@ -375,7 +375,7 @@ const AdminRoutes = [
               title: "restok",
               icon: "mdi-home",
               breadcrumb: {
-                name: "Edit",
+                name: "Detail",
                 path: `${prefix}/restok/edit`,
                 goto: `${prefixName}restok-edit`,
                 params: {
@@ -439,7 +439,7 @@ const AdminRoutes = [
               title: "transaksi",
               icon: "mdi-home",
               breadcrumb: {
-                name: "Edit",
+                name: "Detail",
                 path: `${prefix}/transaksi/edit`,
                 goto: `${prefixName}transaksi-edit`,
                 params: {

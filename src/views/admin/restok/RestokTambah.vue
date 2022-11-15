@@ -280,9 +280,9 @@ const doSimpan = async () => {
             console.log(response);
             // // data.id = response.id;
             // Toast.success("Info", "Data berhasil ditambahkan!");
-            // router.push({ name: "admin-label" });
             Toast.babeng("Info", "Data berhasil disimpan!")
             onResetDataKeranjang();
+            router.push({ name: "admin-restok" });
             return true;
         } catch (error) {
             console.error(error);
@@ -449,9 +449,9 @@ const doSimpan = async () => {
                     <vue-good-table :line-numbers="true" :columns="columns" :rows="dataKeranjang" :search-options="{
                         enabled: true,
                     }" :pagination-options="{
-    enabled: true,
-    perPageDropdown: [10, 20, 50],
-}" styleClass="vgt-table striped bordered condensed" class="py-0">
+                        enabled: true,
+                        perPageDropdown: [10, 20, 50],
+                    }" styleClass="vgt-table striped bordered condensed" class="py-0">
                         <template #table-actions>
                             <div class="space-x-1 space-y-1 gap-1">
                                 <!-- <router-link :to="{

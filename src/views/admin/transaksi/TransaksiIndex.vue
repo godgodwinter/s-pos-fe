@@ -59,19 +59,21 @@ const getData = async () => {
 };
 getData();
 const doEditData = async (id, index) => {
-    Toast.warning("Info", "Menu belum tersedia")
-    // router.push({
-    //     name: "admin-label-edit",
-    //     params: { id: id },
-    // });
+    // Toast.warning("Info", "Menu belum tersedia")
+    // console.log(id, index);
+    router.push({
+        name: "admin-transaksi-edit",
+        params: { id: id },
+    });
 };
 const doDeleteData = async (id, index) => {
     if (confirm("Apakah anda yakin menghapus data ini?")) {
         try {
-            // const response = await Api.delete(`admin/restok/${id}`);
+            const response = await Api.delete(`admin/transaksi/${id}`);
             // data.value.splice(index, 1);
-            // Toast.success("Success", "Data Berhasil dihapus!");
-            Toast.warning("Info", "Menu belum tersedia")
+            Toast.success("Success", "Data Berhasil dihapus!");
+            getData();
+            // Toast.warning("Info", "Menu belum tersedia")
             // return response.data;
         } catch (error) {
             console.error(error);
@@ -109,7 +111,7 @@ const doDeleteData = async (id, index) => {
             <template #table-row="props">
                 <span v-if="props.column.field == 'actions'">
                     <div class="text-sm font-medium text-center flex justify-center space-x-1">
-                        <button @click="doDeleteData(props.row.id, props.index)"
+                        <button @click="doEditData(props.row.id, props.index)"
                             class="tooltip text-sky-100 block rounded-md font-bold py-1 px-1 flex items-center hover:text-sky-300 bg-sky-400 rounded-lg"
                             data-tip="Detail">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
