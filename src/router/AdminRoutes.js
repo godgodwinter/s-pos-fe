@@ -452,6 +452,65 @@ const AdminRoutes = [
           },
         ],
       },
+      {
+        path: `${prefix}/laporan`,
+        name: `${prefixName}laporan`,
+        meta: {
+          title: "laporan",
+          icon: "mdi-home",
+          breadcrumb: {
+            name: "laporan",
+            path: `${prefix}/laporan`,
+            goto: `${prefixName}laporan`,
+          },
+        },
+        redirect: `${prefix}/laporan/index`,
+        component: () => import("@/views/admin/laporan/LaporanLayout.vue"),
+        children: [
+          {
+            path: `${prefix}/laporan/index`,
+            name: `${prefixName}laporan-index`,
+            meta: {
+              title: "laporan",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Index",
+                path: `${prefix}/laporan/index`,
+                goto: `${prefixName}laporan-index`,
+              },
+            },
+            component: () => import("@/views/admin/laporan/LaporanIndex.vue"), //laporan penjualan
+          },
+          {
+            path: `${prefix}/laporan/restok`,
+            name: `${prefixName}laporan-restok`,
+            meta: {
+              title: "laporan",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "restok",
+                path: `${prefix}/laporan/restok`,
+                goto: `${prefixName}laporan-restok`,
+              },
+            },
+            component: () => import("@/views/admin/laporan/LaporanRestok.vue"),
+          },
+          {
+            path: `${prefix}/laporan/laba`,
+            name: `${prefixName}laporan-laba`,
+            meta: {
+              title: "laporan",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "laba",
+                path: `${prefix}/laporan/laba`,
+                goto: `${prefixName}laporan-laba`,
+              },
+            },
+            component: () => import("@/views/admin/laporan/LaporanLaba.vue"),
+          },
+        ],
+      },
     ],
   },
 ];
