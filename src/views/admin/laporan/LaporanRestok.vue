@@ -7,12 +7,18 @@ import { useStoreAdmin } from "@/stores/admin";
 import ButtonEdit from "@/components/Button/ButtonEdit.vue";
 import ButtonDelete from "@/components/Button/ButtonDel.vue";
 import Toast from "@/components/lib/Toast";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import Fungsi from "@/components/lib/FungsiCampur"
+import moment from "moment/min/moment-with-locales";
+import localization from "moment/locale/id";
+moment.updateLocale("id", localization);
 const router = useRouter();
+const route = useRoute();
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("laporanrestok");
 
+const blnthn = ref(route.params.blnthn ? route.params.blnthn : moment().year() + "-" + (parseInt(moment().month()) + 1));
+// console.log(route.params.blnthn);
 const columns = [
     {
         label: "Actions",
@@ -39,18 +45,19 @@ const columns = [
     },
     {
         label: "Total Pembayaran",
-        field: "total_bayar",
+        field: "totalbayar",
         type: "String",
     },
 ];
 
-const dataAsli = ref([]);
-const data = ref([]);
+const dataAsli = ref(null);
+const data = ref(null);
 const getData = async () => {
     try {
-        const response = await Api.get(`admin/transaksi`);
+        // console.log(blnthn);
+        const response = await Api.get(`admin/laporan/restok/?blnthn=${blnthn.value}`);
         dataAsli.value = response.data;
-        data.value = response.data;
+        data.value = response.data.detail;
 
         return response.data;
     } catch (error) {
@@ -62,7 +69,7 @@ const doEditData = async (id, index) => {
     // Toast.warning("Info", "Menu belum tersedia")
     // console.log(id, index);
     router.push({
-        name: "admin-transaksi-edit",
+        name: "admin-restok-edit",
         params: { id: id },
     });
 };
@@ -80,6 +87,21 @@ const doDeleteData = async (id, index) => {
         }
     }
 };
+const month = ref({
+    month: moment(blnthn.value).month(),
+    year: moment(blnthn.value).year(),
+});
+
+const fnMonth = () => {
+    let temp = month.value.year + "-" + parseInt(month.value.month + 1);
+    console.log(month.value, temp);
+    blnthn.value = temp;
+    getData();
+    router.push({
+        name: "admin-laporan-restok",
+        params: { blnthn: temp },
+    });
+}
 </script>
 <template>
     <BreadCrumb />
@@ -95,7 +117,10 @@ const doDeleteData = async (id, index) => {
                                     <td class="whitespace-nowrap w-1/12">Pilih Laporan Bulan</td>
                                     <td class="whitespace-nowrap w-1/12">:</td>
                                     <td class="whitespace-nowrap w-10/12">
-                                        aaa
+                                        <div class="flex py-2 px-2 space-x-2">
+                                            <Datepicker v-model="month" monthPicker />
+                                            <button class="btn btn-md btn-info" @click="fnMonth()">Pilih</button>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -107,7 +132,7 @@ const doDeleteData = async (id, index) => {
             </div>
         </div>
     </div>
-    <div>
+    <div v-if="dataAsli">
         <div class="md:py-2 px-4 lg:flex flex-wrap gap-4">
             <div class="w-full lg:w-full">
                 <div class="bg-white shadow rounded-lg px-4 py-4">
@@ -117,24 +142,27 @@ const doDeleteData = async (id, index) => {
                                 <tr>
                                     <td>TANGGAL TRANSAKSI</td>
                                     <td>:</td>
-                                    <td>aa</td>
+                                    <td>{{ dataAsli.blnthn_view }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="whitespace-nowrap w-1/12">TOTAL PENDAPATAN / PEMASUKAN </td>
+                                    <td class="whitespace-nowrap w-1/12">TOTAL PENJUALAN </td>
                                     <td class="whitespace-nowrap w-1/12">:</td>
                                     <td class="whitespace-nowrap w-10/12">
-                                        aaa
+                                        {{ Fungsi.formatRupiah(dataAsli.total_pendapatan, "Rp. ") }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>TOTAL TRANSAKSI </td>
                                     <td>:</td>
-                                    <td>aa</td>
+                                    <td>{{ dataAsli.jml_transaksi }}</td>
                                 </tr>
                                 <tr>
                                     <td>TOTAL BARANG TERJUAL </td>
                                     <td>:</td>
-                                    <td>aa</td>
+                                    <td>{{ dataAsli.jml_barang }}
+                                        <!-- | ({{ dataAsli.jml_jenis_barang }}
+                                        Jenis Barang) -->
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -144,7 +172,7 @@ const doDeleteData = async (id, index) => {
         </div>
     </div>
     <!-- <h4>Ini Produk index</h4> -->
-    <div>
+    <div v-if="data">
 
         <vue-good-table :line-numbers="true" :columns="columns" :rows="data" :search-options="{
             enabled: true,
@@ -181,12 +209,12 @@ const doDeleteData = async (id, index) => {
                             </svg>
 
                         </button>
-                        <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
+                        <!-- <ButtonDelete @click="doDeleteData(props.row.id, props.index)" /> -->
                     </div>
                 </span>
 
-                <span v-else-if="props.column.field == 'total_bayar'">
-                    {{ Fungsi.formatRupiah(props.row.total_bayar, "Rp. ") }}
+                <span v-else-if="props.column.field == 'totalbayar'">
+                    {{ Fungsi.formatRupiah(props.row.totalbayar, "Rp. ") }}
                 </span>
                 <span v-else>
                     {{ props.formattedRow[props.column.field] }}

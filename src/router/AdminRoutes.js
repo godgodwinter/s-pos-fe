@@ -482,28 +482,28 @@ const AdminRoutes = [
             component: () => import("@/views/admin/laporan/LaporanIndex.vue"), //laporan penjualan
           },
           {
-            path: `${prefix}/laporan/restok`,
+            path: `${prefix}/laporan/restok/:blnthn?`,
             name: `${prefixName}laporan-restok`,
             meta: {
               title: "laporan",
               icon: "mdi-home",
               breadcrumb: {
                 name: "restok",
-                path: `${prefix}/laporan/restok`,
+                path: `${prefix}/laporan/restok/:blnthn?`,
                 goto: `${prefixName}laporan-restok`,
               },
             },
             component: () => import("@/views/admin/laporan/LaporanRestok.vue"),
           },
           {
-            path: `${prefix}/laporan/laba`,
+            path: `${prefix}/laporan/laba/:blnthn?`,
             name: `${prefixName}laporan-laba`,
             meta: {
               title: "laporan",
               icon: "mdi-home",
               breadcrumb: {
                 name: "laba",
-                path: `${prefix}/laporan/laba`,
+                path: `${prefix}/laporan/laba/:blnthn?`,
                 goto: `${prefixName}laporan-laba`,
               },
             },

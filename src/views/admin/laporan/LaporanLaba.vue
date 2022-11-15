@@ -7,12 +7,18 @@ import { useStoreAdmin } from "@/stores/admin";
 import ButtonEdit from "@/components/Button/ButtonEdit.vue";
 import ButtonDelete from "@/components/Button/ButtonDel.vue";
 import Toast from "@/components/lib/Toast";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import Fungsi from "@/components/lib/FungsiCampur"
+import moment from "moment/min/moment-with-locales";
+import localization from "moment/locale/id";
+moment.updateLocale("id", localization);
 const router = useRouter();
+const route = useRoute();
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("laporanlaba");
 
+const blnthn = ref(route.params.blnthn ? route.params.blnthn : moment().year() + "-" + (parseInt(moment().month()) + 1));
+// console.log(route.params.blnthn);
 const columns = [
     {
         label: "Actions",
@@ -39,18 +45,19 @@ const columns = [
     },
     {
         label: "Total Pembayaran",
-        field: "total_bayar",
+        field: "totalbayar",
         type: "String",
     },
 ];
 
-const dataAsli = ref([]);
-const data = ref([]);
+const dataAsli = ref(null);
+const data = ref(null);
 const getData = async () => {
     try {
-        const response = await Api.get(`admin/transaksi`);
+        // console.log(blnthn);
+        const response = await Api.get(`admin/laporan/laba/?blnthn=${blnthn.value}`);
         dataAsli.value = response.data;
-        data.value = response.data;
+        // data.value = response.data.detail;
 
         return response.data;
     } catch (error) {
@@ -62,7 +69,7 @@ const doEditData = async (id, index) => {
     // Toast.warning("Info", "Menu belum tersedia")
     // console.log(id, index);
     router.push({
-        name: "admin-transaksi-edit",
+        name: "admin-restok-edit",
         params: { id: id },
     });
 };
@@ -80,6 +87,21 @@ const doDeleteData = async (id, index) => {
         }
     }
 };
+const month = ref({
+    month: moment(blnthn.value).month(),
+    year: moment(blnthn.value).year(),
+});
+
+const fnMonth = () => {
+    let temp = month.value.year + "-" + parseInt(month.value.month + 1);
+    console.log(month.value, temp);
+    blnthn.value = temp;
+    getData();
+    router.push({
+        name: "admin-laporan-laba",
+        params: { blnthn: temp },
+    });
+}
 </script>
 <template>
     <BreadCrumb />
@@ -95,7 +117,10 @@ const doDeleteData = async (id, index) => {
                                     <td class="whitespace-nowrap w-1/12">Pilih Laporan Bulan</td>
                                     <td class="whitespace-nowrap w-1/12">:</td>
                                     <td class="whitespace-nowrap w-10/12">
-                                        aaa
+                                        <div class="flex py-2 px-2 space-x-2">
+                                            <Datepicker v-model="month" monthPicker />
+                                            <button class="btn btn-md btn-info" @click="fnMonth()">Pilih</button>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -107,7 +132,7 @@ const doDeleteData = async (id, index) => {
             </div>
         </div>
     </div>
-    <div>
+    <div v-if="dataAsli">
         <div class="md:py-2 px-4 lg:flex flex-wrap gap-4">
             <div class="w-full lg:w-full">
                 <div class="bg-white shadow rounded-lg px-4 py-4">
@@ -115,38 +140,60 @@ const doDeleteData = async (id, index) => {
                         <table class="table table-compact">
                             <tbody>
                                 <tr>
-                                    <td>TANGGAL TRANSAKSI</td>
+                                    <td>TANGGAL </td>
                                     <td>:</td>
-                                    <td>aa</td>
+                                    <td>{{ dataAsli.blnthn_view }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="whitespace-nowrap w-1/12">TOTAL PENDAPATAN / PEMASUKAN </td>
+                                    <td class="whitespace-nowrap w-1/12">TOTAL PENJUALAN / TRANSAKSI </td>
                                     <td class="whitespace-nowrap w-1/12">:</td>
                                     <td class="whitespace-nowrap w-10/12">
-                                        aaa
+                                        {{ Fungsi.formatRupiah(dataAsli.total_transaksi, "Rp. ") }} <button
+                                            class="btn btn-sm btn-info" @click="router.push({
+                                                name: 'admin-laporan-index',
+                                                params: { blnthn: blnthn }
+                                            })">Detail
+                                            Penjualan</button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>TOTAL BARANG TERJUAL </td>
+                                    <td>JUMLAH TRANSAKSI PENJUALAN </td>
                                     <td>:</td>
-                                    <td>aa</td>
+                                    <td>{{ dataAsli.jml_transaksi }}</td>
                                 </tr>
+
                                 <tr>
-                                    <td class="whitespace-nowrap w-1/12">TOTAL PENGELUARAN / RESTOK BARANG</td>
+                                    <td class="whitespace-nowrap w-1/12">TOTAL RESTOK </td>
                                     <td class="whitespace-nowrap w-1/12">:</td>
                                     <td class="whitespace-nowrap w-10/12">
-                                        aaa
+                                        {{ Fungsi.formatRupiah(dataAsli.total_restok, "Rp. ") }} <button
+                                            class="btn btn-sm btn-info" @click="router.push({
+                                                name: 'admin-laporan-restok',
+                                                params: { blnthn: blnthn }
+                                            })">Detail
+                                            Restok</button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>TOTAL BARANG DIBELI / MASUK </td>
+                                    <td>JUMLAH TRANSAKSI RESTOK </td>
                                     <td>:</td>
-                                    <td>aa</td>
+                                    <td>{{ dataAsli.jml_transaksi }}</td>
                                 </tr>
                                 <tr>
-                                    <td>TOTAL PENDAPATAN BERSIH / LABA </td>
+                                    <td>TOTAL LABA/RUGI </td>
                                     <td>:</td>
-                                    <td>aa</td>
+                                    <td>
+                                        <label class="text-red-500" v-if="dataAsli.status == 'Rugi'">{{ dataAsli.status
+                                        }}
+                                            {{
+                                                    Fungsi.formatRupiah(dataAsli.total_laba, "Rp. ")
+                                            }}</label>
+                                        <label class="text-green-500" v-else>{{ dataAsli.status }} {{
+                                                Fungsi.formatRupiah(dataAsli.total_laba, "Rp. ")
+                                        }}</label>
+                                        <!-- | ({{ dataAsli.jml_jenis_barang }}
+                                        Jenis Barang) -->
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -154,56 +201,5 @@ const doDeleteData = async (id, index) => {
                 </div>
             </div>
         </div>
-    </div>
-    <!-- <h4>Ini Produk index</h4> -->
-    <div>
-
-        <vue-good-table :line-numbers="true" :columns="columns" :rows="data" :search-options="{
-            enabled: true,
-        }" :pagination-options="{
-    enabled: true,
-    perPageDropdown: [10, 20, 50],
-}" styleClass="vgt-table striped bordered condensed" class="py-0">
-            <template #table-actions>
-                <div class="space-x-1 space-y-1 gap-1">
-                    <router-link :to="{
-                        name: 'admin-transaksi-tambah',
-                    }">
-                        <button class="btn btn-sm btn-primary tooltip" data-tip="Tambah ">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </router-link>
-                </div>
-            </template>
-            <template #table-row="props">
-                <span v-if="props.column.field == 'actions'">
-                    <div class="text-sm font-medium text-center flex justify-center space-x-1">
-                        <button @click="doEditData(props.row.id, props.index)"
-                            class="tooltip text-sky-100 block rounded-md font-bold py-1 px-1 flex items-center hover:text-sky-300 bg-sky-400 rounded-lg"
-                            data-tip="Detail">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-                            </svg>
-
-                        </button>
-                        <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
-                    </div>
-                </span>
-
-                <span v-else-if="props.column.field == 'total_bayar'">
-                    {{ Fungsi.formatRupiah(props.row.total_bayar, "Rp. ") }}
-                </span>
-                <span v-else>
-                    {{ props.formattedRow[props.column.field] }}
-                </span>
-            </template>
-        </vue-good-table>
     </div>
 </template>
