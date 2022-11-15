@@ -468,14 +468,14 @@ const AdminRoutes = [
         component: () => import("@/views/admin/laporan/LaporanLayout.vue"),
         children: [
           {
-            path: `${prefix}/laporan/index`,
+            path: `${prefix}/laporan/index/:blnthn?`,
             name: `${prefixName}laporan-index`,
             meta: {
               title: "laporan",
               icon: "mdi-home",
               breadcrumb: {
                 name: "Index",
-                path: `${prefix}/laporan/index`,
+                path: `${prefix}/laporan/index/:blnthn?`,
                 goto: `${prefixName}laporan-index`,
               },
             },
