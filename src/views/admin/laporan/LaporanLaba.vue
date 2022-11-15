@@ -55,7 +55,7 @@ const data = ref(null);
 const getData = async () => {
     try {
         // console.log(blnthn);
-        const response = await Api.get(`admin/laporan/laba/?blnthn=${blnthn.value}`);
+        const response = await Api.get(`admin/laporan/laba?blnthn=${blnthn.value}`);
         dataAsli.value = response.data;
         // data.value = response.data.detail;
 
