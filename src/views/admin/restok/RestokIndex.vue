@@ -64,10 +64,11 @@ const getData = async () => {
 };
 getData();
 const doEditData = async (id, index) => {
-    router.push({
-        name: "admin-label-edit",
-        params: { id: id },
-    });
+    Toast.warning("Info", "Menu belum tersedia")
+    // router.push({
+    //     name: "admin-label-edit",
+    //     params: { id: id },
+    // });
 };
 const doDeleteData = async (id, index) => {
     if (confirm("Apakah anda yakin menghapus data ini?")) {
