@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute } from "vue-router";
 import QrcodeVue from "qrcode.vue";
+import IconProduct from "@/components/icons/IconMonstrProduct.vue";
 const route = useRoute();
 let value = "https://example.com";
 let size = 300;
@@ -80,8 +81,7 @@ const id = route.params.id;
                             <div class="flex items-center space-x-3">
                                 <div class="avatar">
                                     <div class="mask mask-squircle w-12 h-12">
-                                        <img src="/tailwind-css-component-profile-2@56w.png"
-                                            alt="Avatar Tailwind CSS Component" />
+                                        <IconProduct />
                                     </div>
                                 </div>
                                 <div>
@@ -111,8 +111,7 @@ const id = route.params.id;
                             <div class="flex items-center space-x-3">
                                 <div class="avatar">
                                     <div class="mask mask-squircle w-12 h-12">
-                                        <img src="/tailwind-css-component-profile-3@56w.png"
-                                            alt="Avatar Tailwind CSS Component" />
+                                        <IconProduct />
                                     </div>
                                 </div>
                                 <div>
@@ -142,8 +141,7 @@ const id = route.params.id;
                             <div class="flex items-center space-x-3">
                                 <div class="avatar">
                                     <div class="mask mask-squircle w-12 h-12">
-                                        <img src="/tailwind-css-component-profile-4@56w.png"
-                                            alt="Avatar Tailwind CSS Component" />
+                                        <IconProduct />
                                     </div>
                                 </div>
                                 <div>
@@ -173,8 +171,8 @@ const id = route.params.id;
                             <div class="flex items-center space-x-3">
                                 <div class="avatar">
                                     <div class="mask mask-squircle w-12 h-12">
-                                        <img src="/tailwind-css-component-profile-5@56w.png"
-                                            alt="Avatar Tailwind CSS Component" />
+
+                                        <IconProduct />
                                     </div>
                                 </div>
                                 <div>
