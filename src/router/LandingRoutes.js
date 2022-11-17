@@ -18,11 +18,21 @@ const LandingRoutes = [
       {
         path: "/",
         name: "home",
-        component: () => import("@/views/landing/HomeView.vue"),
+        component: () => import("@/views/landing/KatalogIndex.vue"),
       },
+      // {
+      //   path: "/",
+      //   name: "LandingLogin",
+      //   component: () => import("@/views/landing/HomeView.vue"),
+      // },
       {
         path: "/",
-        name: "LandingLogin",
+        name: "PegawaiLogin",
+        component: () => import("@/views/landing/PegawaiLogin.vue"),
+      },
+      {
+        path: "/adminlogin",
+        name: "AdminLogin",
         component: () => import("@/views/landing/HomeView.vue"),
       },
       {

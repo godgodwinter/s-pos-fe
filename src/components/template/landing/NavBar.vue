@@ -25,18 +25,31 @@ window.addEventListener("scroll", onScroll);
         windowTop < 10,
     }">
       <div class="flex lg:justify-center px-10 mx-4 overflow-auto w-full justify-center">
-        <button
-          class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
-          Admin
-        </button>
-        <button
-          class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
-          Pegawai
-        </button>
-        <button
-          class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
-          Katalog
-        </button>
+        <router-link :to="{
+          name: 'home',
+        }">
+          <button
+            class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
+            Katalog
+          </button>
+        </router-link>
+        <router-link :to="{
+          name: 'AdminLogin',
+        }">
+          <button
+            class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
+            Admin
+          </button>
+        </router-link>
+        <router-link :to="{
+          name: 'PegawaiLogin',
+        }">
+          <button
+            class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
+            Pegawai
+          </button>
+        </router-link>
+
 
         <button v-if="theme == 'cupcake'" @click="doUpdateTheme('dark')"
           class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r last:border-none">

@@ -12,5 +12,5 @@ import NavBar from "@/components/template/landing/NavBar.vue";
     <div class="py-12 px-4">
         <router-view />
     </div>
-    <Footer />
+    <!-- <Footer /> -->
 </template>
