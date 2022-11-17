@@ -1,6 +1,21 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
 const route = useRoute();
+const onProdukDetail = (id) => {
+    router.push({
+        name: "produk-detail",
+        params: { id: id },
+    });
+
+}
+const onKategori = (id) => {
+    router.push({
+        name: "katalog-kategori",
+        params: { id: id },
+    });
+
+}
 
 const id = route.params.id;
 </script>
@@ -60,14 +75,15 @@ const id = route.params.id;
                     <div class="card w-96 glass">
                         <figure><img src="https://placeimg.com/400/225/arch" alt="car!" /></figure>
                         <div class="card-body">
-                            <h2 class="card-title">Life hack</h2>
+                            <h2 class="card-title">Produk {{ i }}</h2>
                             <p>How to park your car at your garage?</p>
                             <div class="card-actions justify-end">
                                 <div class="badge badge-outline">Fashion</div>
                                 <div class="badge badge-outline">Products</div>
                             </div>
                             <div class="card-actions justify-end">
-                                <button class="btn btn-info">Detail</button>
+                                <button class="btn btn-info" @click="onProdukDetail(i)">Detail Produk {{ i
+                                }}</button>
                             </div>
                         </div>
                     </div>
@@ -76,6 +92,5 @@ const id = route.params.id;
         </div>
 
     </div>
-
 
 </template>

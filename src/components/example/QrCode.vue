@@ -1,4 +1,5 @@
 <script setup>
+/* eslint-disable */
 import QrcodeVue from 'qrcode.vue'
 let value = 'https://example.com';
 let size = 300;
