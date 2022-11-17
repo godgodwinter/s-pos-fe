@@ -18,7 +18,28 @@ const LandingRoutes = [
       {
         path: "/",
         name: "home",
-        component: () => import("@/views/landing/KatalogIndex.vue"),
+        component: () => import("@/views/landing/katalog/KatalogIndex.vue"),
+      },
+      {
+        path: "/katalog/kategori/:id?",
+        name: "katalog-kategori",
+        component: () => import("@/views/landing/katalog/KatalogKategori.vue"),
+      },
+      {
+        path: "/katalog",
+        name: "katalog-index",
+        component: () => import("@/views/landing/katalog/KatalogIndex.vue"),
+      },
+      {
+        path: "/produk/detail/:id?",
+        name: "produk-detail",
+        component: () => import("@/views/landing/katalog/ProdukDetail.vue"),
+      },
+      {
+        path: "/transaksi/detail/:id?",
+        name: "transaksi-detail",
+        component: () =>
+          import("@/views/landing/transaksi/TransaksiDetail.vue"),
       },
       // {
       //   path: "/",

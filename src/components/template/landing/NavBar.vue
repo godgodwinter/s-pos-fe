@@ -50,6 +50,14 @@ window.addEventListener("scroll", onScroll);
           </button>
         </router-link>
 
+        <router-link :to="{
+          name: 'transaksi-detail', params: { id: 1 },
+        }">
+          <button
+            class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight">
+            Transaksi //Testing
+          </button>
+        </router-link>
 
         <button v-if="theme == 'cupcake'" @click="doUpdateTheme('dark')"
           class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r last:border-none">

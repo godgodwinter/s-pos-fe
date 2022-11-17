@@ -1,3 +1,21 @@
+<script setup>
+import { useRouter } from "vue-router";
+const router = useRouter();
+const onProdukDetail = (id) => {
+    router.push({
+        name: "produk-detail",
+        params: { id: id },
+    });
+
+}
+const onKategori = (id) => {
+    router.push({
+        name: "katalog-kategori",
+        params: { id: id },
+    });
+
+}
+</script>
 <template>
     <div>
         <!-- header -->
@@ -13,7 +31,7 @@
                                 <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
                                     excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
                                 </p>
-                                <button class="btn btn-primary">Get Started</button>
+                                <button class="btn btn-info" @click="onProdukDetail(1)">Detail Produk</button>
                             </div>
                         </div>
                     </div>
@@ -27,7 +45,7 @@
                                 <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
                                     excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
                                 </p>
-                                <button class="btn btn-primary">Get Started</button>
+                                <button class="btn btn-info" @click="onProdukDetail(2)">Detail Produk</button>
                             </div>
                         </div>
                     </div>
@@ -41,7 +59,7 @@
                                 <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
                                     excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
                                 </p>
-                                <button class="btn btn-primary">Get Started</button>
+                                <button class="btn btn-info" @click="onProdukDetail(3)">Detail Produk</button>
                             </div>
                         </div>
                     </div>
@@ -55,7 +73,7 @@
                                 <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
                                     excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
                                 </p>
-                                <button class="btn btn-primary">Get Started</button>
+                                <button class="btn btn-info" @click="onProdukDetail(4)">Detail Produk</button>
                             </div>
                         </div>
                     </div>
@@ -72,7 +90,7 @@
         <div class="divider"></div>
         <div class="shadow-sm ">
             <div class="tabs tabs-boxed py-2">
-                <a class="tab">SEMUA</a>
+                <a class="tab" @click="onKategori(1)">SEMUA</a>
                 <a class="tab tab-active">KATEGORI 1</a>
                 <a class="tab">KATEGORI 2</a>
                 <a class="tab">KATEGORI 3</a>
@@ -120,14 +138,15 @@
                         <div class="card w-96 glass">
                             <figure><img src="https://placeimg.com/400/225/arch" alt="car!" /></figure>
                             <div class="card-body">
-                                <h2 class="card-title">Life hack</h2>
+                                <h2 class="card-title">Produk {{ i }}</h2>
                                 <p>How to park your car at your garage?</p>
                                 <div class="card-actions justify-end">
                                     <div class="badge badge-outline">Fashion</div>
                                     <div class="badge badge-outline">Products</div>
                                 </div>
                                 <div class="card-actions justify-end">
-                                    <button class="btn btn-info">Detail</button>
+                                    <button class="btn btn-info" @click="onProdukDetail(i)">Detail Produk {{ i
+                                    }}</button>
                                 </div>
                             </div>
                         </div>
