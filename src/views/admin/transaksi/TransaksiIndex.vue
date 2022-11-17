@@ -80,6 +80,13 @@ const doDeleteData = async (id, index) => {
         }
     }
 };
+
+const doDetailData = async (kodetrans, index) => {
+    router.push({
+        name: "admin-transaksi-detail",
+        params: { kodetrans: kodetrans },
+    });
+};
 </script>
 <template>
     <BreadCrumb />
@@ -122,6 +129,8 @@ const doDeleteData = async (id, index) => {
 
                         </button>
                         <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
+                        <button class="btn btn-xs tooltip btn-info" data-tip="Detail //QRCODE"
+                            @click="doDetailData(props.row.kodetrans, props.index)">D </button>
                     </div>
                 </span>
 

@@ -19,7 +19,7 @@ const doLogout = async () => {
   if (confirm("Apakah anda yakin ingin Logout?")) {
     const resLogout = await serviceAuth.doLogout();
     if (resLogout) {
-      router.push({ name: "LandingLogin" });
+      router.push({ name: "home" });
     }
   }
 };

@@ -128,6 +128,23 @@ const AdminRoutes = [
             },
             component: () => import("@/views/admin/produk/ProdukEdit.vue"),
           },
+          {
+            path: `${prefix}/produk/detail/:slug`,
+            name: `${prefixName}produk-detail`,
+            meta: {
+              title: "produk",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Detail",
+                path: `${prefix}/produk/detail`,
+                goto: `${prefixName}produk-detail`,
+                params: {
+                  slug: "slug",
+                },
+              },
+            },
+            component: () => import("@/views/admin/produk/ProdukDetail.vue"),
+          },
         ],
       },
       {
@@ -449,6 +466,24 @@ const AdminRoutes = [
             },
             component: () =>
               import("@/views/admin/transaksi/TransaksiEdit.vue"),
+          },
+          {
+            path: `${prefix}/transaksi/detail/:kodetrans`,
+            name: `${prefixName}transaksi-detail`,
+            meta: {
+              title: "transaksi",
+              icon: "mdi-home",
+              breadcrumb: {
+                name: "Detail",
+                path: `${prefix}/transaksi/detail`,
+                goto: `${prefixName}transaksi-detail`,
+                params: {
+                  kodetrans: "kodetrans",
+                },
+              },
+            },
+            component: () =>
+              import("@/views/admin/transaksi/TransaksiDetail.vue"),
           },
         ],
       },

@@ -84,6 +84,12 @@ const doEditData = async (id, index) => {
         params: { id: id },
     });
 };
+const doDetailData = async (slug, index) => {
+    router.push({
+        name: "admin-produk-detail",
+        params: { slug: slug },
+    });
+};
 const doDeleteData = async (id, index) => {
     if (confirm("Apakah anda yakin menghapus data ini?")) {
         try {
@@ -107,9 +113,9 @@ const doDeleteData = async (id, index) => {
         <vue-good-table :line-numbers="true" :columns="columns" :rows="data" :search-options="{
             enabled: true,
         }" :pagination-options="{
-    enabled: true,
-    perPageDropdown: [10, 20, 50],
-}" styleClass="vgt-table striped bordered condensed" class="py-0">
+            enabled: true,
+            perPageDropdown: [10, 20, 50],
+        }" styleClass="vgt-table striped bordered condensed" class="py-0">
             <template #table-actions>
                 <div class="space-x-1 space-y-1 gap-1">
                     <router-link :to="{
@@ -131,7 +137,8 @@ const doDeleteData = async (id, index) => {
                     <div class="text-sm font-medium text-center flex justify-center space-x-1">
                         <ButtonEdit @click="doEditData(props.row.id, props.index)" />
                         <ButtonDelete @click="doDeleteData(props.row.id, props.index)" />
-                        <button class="btn btn-xs tooltip btn-info" data-tip="Detail //QRCODE">D </button>
+                        <button class="btn btn-xs tooltip btn-info" data-tip="Detail //QRCODE"
+                            @click="doDetailData(props.row.slug, props.index)">D </button>
                     </div>
                 </span>
                 <span v-else-if="props.column.field == 'harga_jual_default'">

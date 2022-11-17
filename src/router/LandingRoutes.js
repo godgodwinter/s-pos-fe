@@ -36,10 +36,21 @@ const LandingRoutes = [
         component: () => import("@/views/landing/katalog/ProdukDetail.vue"),
       },
       {
+        path: "/produk/slug/:slug?",
+        name: "produk-detail-slug",
+        component: () => import("@/views/landing/katalog/ProdukDetailSlug.vue"),
+      },
+      {
         path: "/transaksi/detail/:id?",
         name: "transaksi-detail",
         component: () =>
           import("@/views/landing/transaksi/TransaksiDetail.vue"),
+      },
+      {
+        path: "/transaksi/kodetrans/:kodetrans?",
+        name: "transaksi-detail-kodetrans",
+        component: () =>
+          import("@/views/landing/transaksi/TransaksiDetailKodetrans.vue"),
       },
       // {
       //   path: "/",
@@ -83,7 +94,7 @@ const LandingRoutes = [
       {
         path: "/404",
         name: "NotFound",
-        component: () => import("@/views/landing/HomeView.vue"),
+        component: () => import("@/views/landing/other/404.vue"),
       },
     ],
   },
