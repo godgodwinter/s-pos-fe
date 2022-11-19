@@ -2,6 +2,7 @@
 import { useRouter } from "vue-router";
 import Api from "@/axios/axios";
 import { ref } from "vue";
+import Fungsi from "@/components/lib/FungsiCampur";
 const router = useRouter();
 const onProdukDetail = (slug) => {
     router.push({
@@ -80,9 +81,14 @@ const fnGetProdukTerlaris = async () => {
                     :id="'item' + index">
                     <div class="w-full flex justify-center">
                         <div class="hero-content flex-col lg:flex-row-reverse">
-                            <img src="https://placeimg.com/260/400/arch" class="max-w-sm rounded-lg shadow-2xl" />
-                            <div>
+                            <img :src="item.photo[0].link" class="max-w-sm rounded-lg shadow-2xl"
+                                v-if="item.photo.length > 0" />
+                            <img src="https://placeimg.com/260/400/arch" class="max-w-sm rounded-lg shadow-2xl"
+                                v-else />
+                            <div class="py-4 space-y-2">
                                 <h1 class="text-5xl font-bold">{{ item.nama }}</h1>
+
+                                <p>{{ Fungsi.formatRupiah(item.harga_jual_default, 'Rp. ') }} </p>
                                 <!-- <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
                                     excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
                                 </p> -->
@@ -154,7 +160,7 @@ const fnGetProdukTerlaris = async () => {
                             </figure>
                             <div class="card-body">
                                 <h2 class="card-title"> {{ item.nama }}</h2>
-                                <p>{{ item.desc }}</p>
+                                <p>{{ Fungsi.formatRupiah(item.harga_jual_default, 'Rp. ') }} </p>
                                 <div class="card-actions justify-end">
                                     <div class="badge badge-outline" v-for="label, index in item.labelSelected">{{
                                             label.nama
