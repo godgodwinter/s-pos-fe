@@ -35,6 +35,7 @@ const getDataDetail = async () => {
         // console.log(response.data.harga_jual_default);
         dataDetail.value.harga_jual_default = Fungsi.formatRupiah(response.data.harga_jual_default, 'Rp. ');
         labelSelected.value = response.data.labelSelected;
+        listPhoto.value = response.data.photo;
         return response.data;
     } catch (error) {
         console.error(error);
@@ -84,12 +85,13 @@ const onLabelSave = async () => {
     let dataStore = {
         labelSelected: labelSelected.value,
     };
-    console.log(JSON.stringify(dataStore));
+    // console.log(JSON.stringify(dataStore));
     try {
         const response = await Api.post(`admin/produk/${id}/updateLabel`, dataStore);
-        console.log(response);
+        // console.log(response);
         // data.id = response.id;
         Toast.success("Info", "Data berhasil diupdate!");
+        getDataDetail();
         // router.push({ name: "admin-produk" });
 
         return true;
@@ -98,6 +100,88 @@ const onLabelSave = async () => {
     }
 }
 
+
+const listPhoto = ref(null);
+
+
+const fnDoUploadFile = async (file, jenis) => {
+    let link = `admin/produk/${id}/uploadPhoto`;
+
+    let formData = new FormData();
+    formData.append("file", file);
+    //   formData.append("file", file.value.files[0]);
+    //   let dataStore = {
+    //     file: file,
+    //   };
+    try {
+        // const response = await Api.post(link, dataStore);
+
+        const response = await Api.post(link, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        Toast.success("Success", "Data Berhasil update!");
+        getDataDetail();
+        // router.go();
+        // resetForm();
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        Toast.danger("Warning", "Data gagal ditambahkan!");
+        console.error(error);
+    }
+};
+
+
+const photoProduk = ref(null);
+const photoProdukFile = ref(null);
+const doUploadPhotoProduk = () => {
+    if (fnValidateFile(photoProdukFile.value)) {
+        fnDoUploadFile(photoProdukFile.value, "produk");
+        // Toast.babeng("Info", "Fitur belum tersedia!");
+    }
+};
+
+
+const onChangePhotoProduk = (e) => {
+    let file = e.target.files[0];
+    photoProdukFile.value = file;
+    photoProduk.value = URL.createObjectURL(file);
+    console.log(file, photoProduk.value);
+};
+
+const fnValidateFile = (file) => {
+    if (file) {
+        if (file.size > 1048576) {
+            Toast.danger("Warning", "File harus kurang dari 1mb!");
+            return false;
+        }
+        if (file.type != "image/jpeg" && file.type != "image/png") {
+            Toast.danger("Warning", "File harus jpg/png!");
+            return false;
+        }
+
+        return true;
+    } else {
+        Toast.danger("Info", "Pilih File terlebih dahulu!");
+        return false;
+    }
+};
+
+const onDoDeletePhoto = async (imagesId) => {
+    if (confirm("Apakah anda yakin menghapus data ini?")) {
+        try {
+            const response = await Api.delete(`admin/produk/${id}/deletePhoto/${imagesId}`);
+            Toast.success("Success", "Data Berhasil dihapus!");
+            getDataDetail();
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+}
 </script>
 <template>
     <BreadCrumb />
@@ -151,11 +235,6 @@ const onLabelSave = async () => {
         </Form>
     </div>
     <div class="divider"></div>
-    <div>
-        Upload Gambar
-    </div>
-
-    <div class="divider"></div>
     <div class="space-y-4 py-4">
         <div>
             <h4 class="font-bold text-lg uppercase"> TAMBAHKAN Label : </h4>
@@ -174,4 +253,57 @@ const onLabelSave = async () => {
 
 
     </div>
+    <div class="divider"></div>
+    <div>
+        <div>
+            <h4 class="font-bold text-lg uppercase"> PHOTO PRODUK : </h4>
+        </div>
+        <div>
+            preview:
+            <div class="card w-96 glass " v-if="photoProduk">
+                <figure><img :src="photoProduk" alt="Preview" /></figure>
+                <div class="card-body">
+                    <!-- <h2 class="card-title">{{ item.nama }}</h2> -->
+                    <!-- <p>{{ item.desc }}</p> -->
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-danger" @click="photoProduk == null">RESET</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="font-medium text-lg "> Pilih Photo : </h4>
+            <div><input type="file" class="file-input file-input-bordered file-input-accent w-full max-w-xs"
+                    name="photoProduk" @change="onChangePhotoProduk($event)" />
+            </div>
+            <div>
+                <div class="w-full flex justify-end py-10 px-10 gap-4">
+                    <!-- <span class="btn btn-secondary">Batal</span> -->
+                    <button class="btn btn-primary" @click="doUploadPhotoProduk()">Simpan</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <title>
+                List Photo</title>
+            <div clas="flex justify-center w-full">
+                <div v-if="listPhoto" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 space-x-4 px-4 py-4 ">
+                    <div class="card w-96 glass " v-for="item, index in listPhoto" :key="item.id">
+                        <figure><img :src="item.link" :alt="item.nama" /></figure>
+                        <div class="card-body">
+                            <h2 class="card-title">{{ item.nama }}</h2>
+                            <!-- <p>{{ item.desc }}</p> -->
+                            <div class="card-actions justify-end">
+                                <button class="btn btn-danger" @click="onDoDeletePhoto(item.id)">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
 </template>
