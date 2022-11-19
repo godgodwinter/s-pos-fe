@@ -1,10 +1,12 @@
 <script setup>
 import { useRouter } from "vue-router";
+import Api from "@/axios/axios";
+import { ref } from "vue";
 const router = useRouter();
-const onProdukDetail = (id) => {
+const onProdukDetail = (slug) => {
     router.push({
-        name: "produk-detail",
-        params: { id: id },
+        name: "produk-detail-slug",
+        params: { slug: slug },
     });
 
 }
@@ -15,86 +17,93 @@ const onKategori = (id) => {
     });
 
 }
+const dataAsli = ref([]);
+const data = ref([]);
+const getData = async () => {
+    try {
+        const response = await Api.get(`admin/produk`);
+        dataAsli.value = response.data;
+        data.value = response.data;
+        fnGetProdukTerlaris();
+
+        // return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+getData();
+
+
+const dataLabelAsli = ref([]);
+const dataLabel = ref([]);
+const getDataLabel = async () => {
+    try {
+        const response = await Api.get(`admin/label`);
+        dataLabelAsli.value = response.data;
+        dataLabel.value = response.data;
+
+        // return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+getDataLabel();
+
+const inputCari = ref();
+const onKeyUpCari = async (cari) => {
+    // console.log(cari);
+    fnCari();
+}
+
+const fnCari = async () => {
+    // data.value = dataAsli.value.filter(item => { return item })
+    data.value = dataAsli.value.filter(item => { return item.nama.toLowerCase().includes(inputCari.value) });
+}
+
+const produkTerlarisList = ref([]);
+
+const fnGetProdukTerlaris = async () => {
+    produkTerlarisList.value = dataAsli.value.sort(function (a, b) {
+        return b.stok_terjual - a.stok_terjual;
+    });
+
+}
 </script>
 <template>
     <div>
+        <!-- {{ produkTerlarisList.slice(0, 3) }} -->
         <!-- header -->
         <!-- Terbanyak dibeli pada bulan ini -->
         <div class="bg-base-100">
             <div class="carousel w-full">
-                <div id="item1" class="carousel-item w-full">
+                <div class="carousel-item w-full" v-for="item, index in produkTerlarisList.slice(0, 3)" :key="item.id"
+                    :id="'item' + index">
                     <div class="w-full flex justify-center">
                         <div class="hero-content flex-col lg:flex-row-reverse">
                             <img src="https://placeimg.com/260/400/arch" class="max-w-sm rounded-lg shadow-2xl" />
                             <div>
-                                <h1 class="text-5xl font-bold">Produk Terlaris 1!</h1>
-                                <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
+                                <h1 class="text-5xl font-bold">{{ item.nama }}</h1>
+                                <!-- <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
                                     excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
-                                </p>
-                                <button class="btn btn-info" @click="onProdukDetail(1)">Detail Produk</button>
+                                </p> -->
+                                <button class="btn btn-info" @click="onProdukDetail(item.slug)">Detail Produk</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="item2" class="carousel-item w-full">
-                    <div class="w-full flex justify-center">
-                        <div class="hero-content flex-col lg:flex-row-reverse">
-                            <img src="https://placeimg.com/260/400/arch" class="max-w-sm rounded-lg shadow-2xl" />
-                            <div>
-                                <h1 class="text-5xl font-bold">Produk Terlaris 2!</h1>
-                                <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-                                    excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
-                                </p>
-                                <button class="btn btn-info" @click="onProdukDetail(2)">Detail Produk</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="item3" class="carousel-item w-full">
-                    <div class="w-full flex justify-center">
-                        <div class="hero-content flex-col lg:flex-row-reverse">
-                            <img src="https://placeimg.com/260/400/arch" class="max-w-sm rounded-lg shadow-2xl" />
-                            <div>
-                                <h1 class="text-5xl font-bold">Produk Terlaris 3!</h1>
-                                <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-                                    excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
-                                </p>
-                                <button class="btn btn-info" @click="onProdukDetail(3)">Detail Produk</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="item4" class="carousel-item w-full">
-                    <div class="w-full flex justify-center">
-                        <div class="hero-content flex-col lg:flex-row-reverse">
-                            <img src="https://placeimg.com/260/400/arch" class="max-w-sm rounded-lg shadow-2xl" />
-                            <div>
-                                <h1 class="text-5xl font-bold">Produk Terlaris 4!</h1>
-                                <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-                                    excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
-                                </p>
-                                <button class="btn btn-info" @click="onProdukDetail(4)">Detail Produk</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             <div class="flex justify-center w-full py-2 gap-2">
-                <a href="#item1" class="btn btn-xs">1</a>
-                <a href="#item2" class="btn btn-xs">2</a>
-                <a href="#item3" class="btn btn-xs">3</a>
-                <a href="#item4" class="btn btn-xs">4</a>
+                <a v-for="item, index in produkTerlarisList.slice(0, 3)" :key="item.id" :href="'#item' + index"
+                    class="btn btn-xs">{{ index + 1 }}</a>
             </div>
         </div>
         <!-- SECTION KATEGORI -->
         <div class="divider"></div>
         <div class="shadow-sm ">
-            <div class="tabs tabs-boxed py-2">
+            <div class="tabs tabs-boxed py-2 space-x-4">
                 <a class="tab" @click="onKategori(1)">SEMUA</a>
-                <a class="tab tab-active">KATEGORI 1</a>
-                <a class="tab">KATEGORI 2</a>
-                <a class="tab">KATEGORI 3</a>
-                <a class="tab">KATEGORI 4</a>
+                <a class="tab tab-active" v-for="item, index in dataLabel" :key="item.id">{{ item.nama }}</a>
             </div>
         </div>
         <!-- PENCARIAN PRODUK -->
@@ -104,8 +113,9 @@ const onKategori = (id) => {
             <div class="w-full flex justify-center space-x-4">
                 <div class="form-control">
                     <div class="input-group">
-                        <input type="text" placeholder="Cari Produk . . . " class="input input-bordered" />
-                        <button class="btn btn-square">
+                        <input type="text" placeholder="Cari Produk . . . " class="input input-bordered"
+                            @keyup="onKeyUpCari(inputCari)" v-model="inputCari" name="inputCari" />
+                        <button class="btn btn-square" @click="onKeyUpCari(inputCari)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -115,7 +125,7 @@ const onKategori = (id) => {
                     </div>
                 </div>
 
-                <div class="form-control">
+                <!-- <div class="form-control">
                     <div class="input-group">
                         <select class="select select-bordered">
                             <option disabled selected>Urutkan</option>
@@ -125,7 +135,7 @@ const onKategori = (id) => {
                         </select>
                         <button class="btn">Go</button>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- PRODUK -->
@@ -134,19 +144,25 @@ const onKategori = (id) => {
             <div class="flex flex-col w-full mx-auto space-x-4 space-y-4 bg-base-100 rounded-lg">
 
                 <div class="w-full grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-                    <div v-for="i in 10" :key="i" class="flex justify-center py-4">
+                    <div v-for="item, index in data" :key="item.id" class="flex justify-center py-4">
                         <div class="card w-96 glass">
-                            <figure><img src="https://placeimg.com/400/225/arch" alt="car!" /></figure>
+                            <figure v-if="item.photo.length > 0">
+                                <img :src="item.photo[0].link" alt="car!" />
+                            </figure>
+                            <figure v-else>
+                                <img src="https://placeimg.com/400/225/arch" alt="car!" />
+                            </figure>
                             <div class="card-body">
-                                <h2 class="card-title">Produk {{ i }}</h2>
-                                <p>How to park your car at your garage?</p>
+                                <h2 class="card-title"> {{ item.nama }}</h2>
+                                <p>{{ item.desc }}</p>
                                 <div class="card-actions justify-end">
-                                    <div class="badge badge-outline">Fashion</div>
-                                    <div class="badge badge-outline">Products</div>
+                                    <div class="badge badge-outline" v-for="label, index in item.labelSelected">{{
+                                            label.nama
+                                    }}</div>
                                 </div>
                                 <div class="card-actions justify-end">
-                                    <button class="btn btn-info" @click="onProdukDetail(i)">Detail Produk {{ i
-                                    }}</button>
+                                    <button class="btn btn-info" @click="onProdukDetail(item.slug)">Detail Produk
+                                    </button>
                                 </div>
                             </div>
                         </div>
