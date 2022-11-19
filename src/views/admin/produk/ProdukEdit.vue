@@ -32,8 +32,9 @@ const getDataDetail = async () => {
     try {
         const response = await Api.get(`admin/produk/${id}`);
         dataDetail.value = response.data;
-        console.log(response.data.harga_jual_default);
+        // console.log(response.data.harga_jual_default);
         dataDetail.value.harga_jual_default = Fungsi.formatRupiah(response.data.harga_jual_default, 'Rp. ');
+        labelSelected.value = response.data.labelSelected;
         return response.data;
     } catch (error) {
         console.error(error);
@@ -51,7 +52,7 @@ const onSubmit = async (values) => {
     // console.log(dataForm);
     try {
         const response = await Api.put(`admin/produk/${id}`, dataStore);
-        console.log(response);
+        // console.log(response);
         // data.id = response.id;
         Toast.success("Info", "Data berhasil ditambahkan!");
         router.push({ name: "admin-produk" });
@@ -61,6 +62,42 @@ const onSubmit = async (values) => {
         console.error(error);
     }
 };
+const labelExample = [{ id: 1, name: "Canada" }, { id: 2, name: "France" }, { id: 3, name: "USA" }, { id: 4, name: "Finland" }];
+const labelList = ref(labelExample);
+const labelSelected = ref([]);
+
+const getLabel = async () => {
+    try {
+        const response = await Api.get(`admin/label`);
+        labelList.value = response.data;
+        console.log(labelList.value);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+getLabel();
+
+
+const onLabelSave = async () => {
+    // console.log(values);
+    let dataStore = {
+        labelSelected: labelSelected.value,
+    };
+    console.log(JSON.stringify(dataStore));
+    try {
+        const response = await Api.post(`admin/produk/${id}/updateLabel`, dataStore);
+        console.log(response);
+        // data.id = response.id;
+        Toast.success("Info", "Data berhasil diupdate!");
+        // router.push({ name: "admin-produk" });
+
+        return true;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 </script>
 <template>
     <BreadCrumb />
@@ -112,5 +149,29 @@ const onSubmit = async (values) => {
                 <button class="btn btn-primary">Simpan</button>
             </div>
         </Form>
+    </div>
+    <div class="divider"></div>
+    <div>
+        Upload Gambar
+    </div>
+
+    <div class="divider"></div>
+    <div class="space-y-4 py-4">
+        <div>
+            <h4 class="font-bold text-lg uppercase"> TAMBAHKAN Label : </h4>
+        </div>
+        <div>
+            <v-select :options="labelList" :selectable="() => labelSelected.length < 3" v-model="labelSelected" multiple
+                placeholder="Pilih label :" label="nama">
+            </v-select>
+        </div>
+        <div>
+            <div class="w-full flex justify-end py-10 px-10 gap-4">
+                <!-- <span class="btn btn-secondary">Batal</span> -->
+                <button class="btn btn-primary" @click="onLabelSave()">Simpan</button>
+            </div>
+        </div>
+
+
     </div>
 </template>
