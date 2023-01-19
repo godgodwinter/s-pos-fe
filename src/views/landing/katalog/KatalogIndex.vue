@@ -22,7 +22,7 @@ const dataAsli = ref([]);
 const data = ref([]);
 const getData = async () => {
     try {
-        const response = await Api.get(`admin/produk`);
+        const response = await Api.get(`v1/produk`);
         dataAsli.value = response.data;
         data.value = response.data;
         fnGetProdukTerlaris();
@@ -39,7 +39,7 @@ const dataLabelAsli = ref([]);
 const dataLabel = ref([]);
 const getDataLabel = async () => {
     try {
-        const response = await Api.get(`admin/label`);
+        const response = await Api.get(`v1/label`);
         dataLabelAsli.value = response.data;
         dataLabel.value = response.data;
 
@@ -163,7 +163,7 @@ const fnGetProdukTerlaris = async () => {
                                 <p>{{ Fungsi.formatRupiah(item.harga_jual_default, 'Rp. ') }} </p>
                                 <div class="card-actions justify-end">
                                     <div class="badge badge-outline" v-for="label, index in item.labelSelected">{{
-                                            label.nama
+                                        label.nama
                                     }}</div>
                                 </div>
                                 <div class="card-actions justify-end">
