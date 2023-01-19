@@ -7,10 +7,14 @@ export const useStoreAuth = defineStore({
     isLogin: localStorage.getItem("isLogin")
       ? localStorage.getItem("isLogin")
       : false,
+    isAdmin: localStorage.getItem("isAdmin")
+      ? localStorage.getItem("isAdmin")
+      : false,
   }),
   getters: {
     getToken: (state) => state.token,
     getIsLogin: (state) => state.isLogin,
+    getIsAdmin: (state) => state.isAdmin,
   },
   actions: {
     setToken(token) {
@@ -18,6 +22,9 @@ export const useStoreAuth = defineStore({
     },
     setIsLogin(isLogin) {
       this.isLogin = isLogin;
+    },
+    setIsAdmin(isAdmin) {
+      this.isAdmin = isAdmin;
     },
   },
 });

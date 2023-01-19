@@ -7,7 +7,7 @@ const storeAuth = useStoreAuth();
 
 const doLogin = async (username, password) => {
   try {
-    const response = await Api.post("admin/auth/login", {
+    const response = await Api.post("pegawai/auth/login", {
       email: username,
       password: password,
     });
@@ -16,11 +16,11 @@ const doLogin = async (username, password) => {
       const { token } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("isLogin", true);
-      localStorage.setItem("isAdmin", true);
+      localStorage.setItem("isAdmin", false);
       console.log("Login berhasil");
       storeAuth.setIsLogin(true);
       storeAuth.setToken(token);
-      storeAuth.setIsAdmin(true);
+      storeAuth.setIsAdmin(false);
       // let decoded = jwt_decode(token);
       //   storeAuth.commit("setDataAuth", decoded);
       // console.log(decoded);
@@ -37,7 +37,7 @@ const doLogin = async (username, password) => {
 
 const doCheckToken = async (token) => {
   try {
-    const response = await Api.post(`admin/auth/profile`, {
+    const response = await Api.post(`pegawai/auth/profile`, {
       token: token,
     });
     // console.log(response.hasOwnProperty("data"));
