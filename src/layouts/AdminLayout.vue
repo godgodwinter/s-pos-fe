@@ -6,7 +6,7 @@ import Footer from "@/components/template/CFooter.vue";
 import ThemeBar from "@/components/template/ThemeBar.vue";
 import SideBarAdmin from "@/components/template/admin/SideBarAdmin.vue";
 import ScrollToTop from "@/components/template/ScrollToTop.vue";
-import { useStoreAdminAuth } from "@/stores/adminAuth";
+import { useStoreAuth } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import Toast from "@/components/lib/Toast";
 import serviceAuth from "@/services/authServices";
@@ -19,12 +19,12 @@ const doUpdateTheme = (theme) => {
   storeLanding.setTheme(theme);
 };
 const router = useRouter();
-const storeAdminAuth = useStoreAdminAuth();
-const token = computed(() => storeAdminAuth.getToken);
-const isLogin = computed(() => storeAdminAuth.getIsLogin);
-const isAdmin = computed(() => storeAdminAuth.getIsAdmin);
+const storeAuth = useStoreAuth();
+const token = computed(() => storeAuth.getToken);
+const isLogin = computed(() => storeAuth.getIsLogin);
+const isAdmin = computed(() => storeAuth.getIsAdmin);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-storeAdminAuth.$subscribe((mutation, state) => {});
+storeAuth.$subscribe((mutation, state) => {});
 
 const resCheckToken = ref([]);
 const checkTokenExpired = async (dataToken) => {

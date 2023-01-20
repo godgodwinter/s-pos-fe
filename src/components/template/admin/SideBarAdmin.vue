@@ -3,17 +3,17 @@
 import { ref } from "vue";
 import Api from "@/axios/axios";
 import { useStoreAdmin } from "@/stores/admin";
-import { useStoreAdminAuth } from "@/stores/adminAuth";
+import { useStoreAuth } from "@/stores/auth";
 import { computed } from "vue";
 import serviceAuth from "@/services/authServices";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const storeAdmin = useStoreAdmin();
-const storeAdminAuth = useStoreAdminAuth();
-const isAdmin = computed(() => storeAdminAuth.getIsAdmin);
+const storeAuth = useStoreAuth();
+const isAdmin = computed(() => storeAuth.getIsAdmin);
 
 const pagesActive = computed(() => storeAdmin.pagesActive);
-const me = computed(() => storeAdminAuth.me);
+const me = computed(() => storeAuth.me);
 const pagesActiveClass = ref("border-b  border-info rounded-full shadow-lg");
 
 const doLogout = async () => {
@@ -33,12 +33,13 @@ const getDataDetail = async () => {
     let response = null;
     if (isAdmin.value) {
       response = await Api.post(`admin/auth/profile`);
+
+      me.value = response.data.me;
+      storeAuth.setMe(response.data.me);
     } else {
       response = await Api.post(`pegawai/auth/profile`);
     }
-    // me.value = response.data.me;
-    storeAdminAuth.setMe(response.data.me);
-    console.log(me.value);
+    // console.log(me.value);
     return response.data;
   } catch (error) {
     console.error(error);

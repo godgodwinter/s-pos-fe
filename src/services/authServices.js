@@ -48,13 +48,13 @@ const doCheckToken = async (token) => {
       //   storeAdminAuth.setToken(newToken);
       // console.log(response.data.me.nama);
 
-      //   const dataMe = {
-      //     id: response.data.me.id,
-      //     nama: response.data.me.nama,
-      //     username: response.data.me.username,
-      //     email: response.data.me.email,
-      //   };
-      //   storeAdminAuth.setMe(dataMe);
+      // const dataMe = {
+      //   id: response.data.me.id,
+      //   nama: response.data.me.nama,
+      //   username: response.data.me.username,
+      //   email: response.data.me.email,
+      // };
+      // storeAdminAuth.setMe(dataMe);
       // console.log(dataMe);
 
       return true;
